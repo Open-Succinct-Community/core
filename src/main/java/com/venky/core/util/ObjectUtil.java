@@ -16,4 +16,14 @@ public class ObjectUtil {
             return o1.equals(o2);
         }
     }
+    
+    public static boolean isVoid(Object o){
+        if (o == null){
+            return true;
+        }else if (o instanceof String){
+            String s = (String)o; 
+            return (s.trim().length() == 0);
+        }
+        return false;
+    }
 }

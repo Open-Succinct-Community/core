@@ -21,35 +21,45 @@ import java.util.jar.JarFile;
  */
 public class PackageUtil {
     
-    public static List<String> getClasses(URL url, String packagePath) throws IOException{
+    public static List<String> getClasses(URL url, String packagePath) {
         List<String> classes  = new ArrayList<String>();
         
         String path = packagePath;//.replace('.', '/');
-        if (url.getProtocol().equals("jar")){
-            File f = new File(url.getFile().substring("file:".length(), url.getFile().lastIndexOf("!")));
-            JarFile jf = new JarFile(f); 
-            Enumeration<JarEntry> jes =jf.entries();
-            while (jes.hasMoreElements()){
-                JarEntry je = jes.nextElement();
-                if (je.getName().startsWith(path)){
-                    classes.add(je.getName());
+        try {
+            if (url.getProtocol().equals("jar")){
+                File f = new File(url.getFile().substring("file:".length(), url.getFile().lastIndexOf("!")));
+                JarFile jf = new JarFile(f); 
+                Enumeration<JarEntry> jes =jf.entries();
+                while (jes.hasMoreElements()){
+                    JarEntry je = jes.nextElement();
+                    if (je.getName().startsWith(path)){
+                        addClassName(classes, je.getName());
+                    }
+                }
+            }else if (url.getProtocol().equals("file")) {
+                File root = new File(url.getPath());
+                Stack<File> sFiles = new Stack<File>();
+                sFiles.push(root);
+                while (!sFiles.isEmpty()){
+                    File f = sFiles.pop();
+                    String pathRelativeToRoot = f.getPath().length() > root.getPath().length() ? 
+                            f.getPath().substring(root.getPath().length()+1) : "";
+                    if (f.isDirectory()){
+                        sFiles.addAll(Arrays.asList(f.listFiles()));
+                    }else if (pathRelativeToRoot.startsWith(path)){
+                        addClassName(classes, pathRelativeToRoot);
+                    }
                 }
             }
-        }else if (url.getProtocol().equals("file")) {
-            File root = new File(url.getPath());
-            Stack<File> sFiles = new Stack<File>();
-            sFiles.push(root);
-            while (!sFiles.isEmpty()){
-                File f = sFiles.pop();
-                String pathRelativeToRoot = f.getPath().length() > root.getPath().length() ? 
-                        f.getPath().substring(root.getPath().length()+1) : "";
-                if (f.isDirectory()){
-                    sFiles.addAll(Arrays.asList(f.listFiles()));
-                }else if (pathRelativeToRoot.startsWith(path)){
-                    classes.add(pathRelativeToRoot);
-                }
-            }
+        }catch (IOException ex){
+            throw new RuntimeException(ex);
         }
         return classes;
+    }
+    
+    private static void addClassName(List<String> classes , String fileName){
+        if (fileName.endsWith(".class")){
+            classes.add(fileName.substring(0,fileName.length() - ".class".length()).replace('/', '.'));
+        }
     }
 }

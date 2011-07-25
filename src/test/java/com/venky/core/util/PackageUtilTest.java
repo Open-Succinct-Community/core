@@ -40,8 +40,8 @@ public class PackageUtilTest {
 
     @Test
     public void testJar() throws IOException {
-        URL url = new URL("jar:file:/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/rt.jar!/");
-        for (String s : PackageUtil.getClasses(url,"java/lang/String.class")){
+        URL url = getClass().getClassLoader().getResource("java/lang/String.class");
+        for (String s : PackageUtil.getClasses(url,"java/lang/String")){
             System.out.println(s);
         }
     }
