@@ -45,7 +45,7 @@ public class StringUtil {
             if (cArray[i] <= 'Z' && cArray[i] >= 'A') {
                 buff.append("_");
             }
-            buff.append(Character.toLowerCase(cArray[i]));
+            buff.append(Character.toUpperCase(cArray[i]));
         }
         return buff.toString();
     }
