@@ -16,37 +16,19 @@ public class StringUtil {
             return s1.equals(s2);
         }
     }
-    public static String titlize(String underscorizedString) {
-        StringBuilder buff = new StringBuilder(underscorizedString.length());
-        boolean toUpper = true;
-        char[] cArray = underscorizedString.toLowerCase().toCharArray();
-        for (int i = 0;i < cArray.length;i++) {
-            char c = cArray[i];
-            if (toUpper) {
-                buff.append(Character.toUpperCase(c));
-                toUpper = false;
-            } else if (c == '_') {
-                toUpper = true;
-            } else {
-                buff.append(c);
-            }
-        }
-        return buff.toString();
+    public static String camelize(String underscorizedString) {
+        return Inflector.camelize(underscorizedString);
     }
     
-    public static String underscorize(String s){
-        if (s == null || s.length() == 0 ){
-            return s;
-        }
-        char[] cArray = s.toCharArray();
-        StringBuilder buff = new StringBuilder();
-        buff.append(cArray[0]);
-        for (int i = 1 ; i < cArray.length ; i ++){
-            if (cArray[i] <= 'Z' && cArray[i] >= 'A') {
-                buff.append("_");
-            }
-            buff.append(Character.toUpperCase(cArray[i]));
-        }
-        return buff.toString();
+    public static String underscorize(String camel){
+        return Inflector.underscore(camel);
     }
+    
+    public static String pluralize(String singular){
+        return Inflector.pluralize(singular);
+    }
+    public static String singularize(String plural){
+        return Inflector.singularize(plural);
+    }
+    
 }
