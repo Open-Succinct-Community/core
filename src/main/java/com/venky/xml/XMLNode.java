@@ -156,17 +156,14 @@ public class XMLNode {
             return false;
         }
 
-        @Override
         public boolean hasNext() {
             return delegate.hasNext();
         }
 
-        @Override
         public XMLNode next() {
             return delegate.next();
         }
 
-        @Override
         public void remove() {
             delegate.remove();
         }
