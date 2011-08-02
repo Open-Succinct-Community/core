@@ -4,6 +4,8 @@
  */
 package com.venky.core.util;
 
+import java.util.Properties;
+
 /**
  *
  * @author venky
@@ -25,5 +27,22 @@ public class ObjectUtil {
             return (s.trim().length() == 0);
         }
         return false;
+    }
+    
+    public static Properties createProperties(boolean lowercase, String... namevalues){
+        Properties p = new Properties();
+        if (namevalues != null && namevalues.length > 0){
+            if (namevalues.length % 2 != 0){
+                throw new RuntimeException("WrongNumberOfParameters");
+            }
+            for (int i = 0 ; i < namevalues.length ; i = i + 2){
+                if (lowercase){
+                    p.setProperty(namevalues[i].toLowerCase(), namevalues[i+1].toLowerCase());
+                }else {
+                    p.setProperty(namevalues[i], namevalues[i+1]);
+                }
+            }
+        }
+        return p;
     }
 }
