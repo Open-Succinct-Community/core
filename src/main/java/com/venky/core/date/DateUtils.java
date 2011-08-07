@@ -74,21 +74,26 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
         cal.add(field, amount);
         return cal.getTimeInMillis();
     }
-    public static final String APP_TIME_FORMAT_STR = "HHmm";
+    public static final String APP_TIME_FORMAT_STR = "HH:mm";
     public static final DateFormat APP_TIME_FORMAT = new SimpleDateFormat(APP_TIME_FORMAT_STR, Locale.getDefault());
-    public static final String APP_TIME_FORMAT_WITH_TZ_STR = "HHmm Z";
+    
+    public static final String APP_TIME_FORMAT_WITH_TZ_STR = "HH:mm Z";
     public static final DateFormat APP_TIME_FORMAT_WITH_TZ = new SimpleDateFormat(APP_TIME_FORMAT_WITH_TZ_STR, Locale.getDefault());
-    public static final String APP_DATE_TIME_FORMAT_STR = "yyyy-MM-dd HH:mm";
+    
+    public static final String APP_DATE_TIME_FORMAT_STR = "dd/MM/yyyy HH:mm";
     public static final DateFormat APP_DATE_TIME_FORMAT = new SimpleDateFormat(APP_DATE_TIME_FORMAT_STR, Locale.getDefault());
-    public static final String APP_DATE_TIME_FORMAT_WITH_TZ_STR = "yyyy-MM-dd HH:mm Z";
+    
+    public static final String APP_DATE_TIME_FORMAT_WITH_TZ_STR = "dd/MM/yyyy HH:mm Z";
     public static final DateFormat APP_DATE_TIME_FORMAT_WITH_TZ = new SimpleDateFormat(APP_DATE_TIME_FORMAT_WITH_TZ_STR, Locale.getDefault());
-    public static final String APP_DATE_FORMAT_STR = "yyyy-MM-dd";
+    
+    public static final String APP_DATE_FORMAT_STR = "dd/MM/yyyy";
     public static final DateFormat APP_DATE_FORMAT = new SimpleDateFormat(APP_DATE_FORMAT_STR, Locale.getDefault());
+    
     public static final Date HIGH_DATE = getHighDate();
 
     private static Date getHighDate() {
         try {
-            return APP_DATE_TIME_FORMAT.parse("2999-12-31 12:59:59"); // NOPMD by VMahadevan on 1/26/09 11:12 PM
+            return APP_DATE_TIME_FORMAT.parse("31/12/2999 12:59"); // NOPMD by VMahadevan on 1/26/09 11:12 PM
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -147,7 +152,6 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
 
     }
 
-    @SuppressWarnings("PMD")
     public static Date getDate(final String dateStr) {
         try {
             return APP_DATE_TIME_FORMAT_WITH_TZ.parse(dateStr);
@@ -166,16 +170,17 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
         throw new RuntimeException("Unknown Date Format");
     }
 
-    @SuppressWarnings("PMD")
     public static Date getTime(String time) {
         try {
-            return APP_TIME_FORMAT_WITH_TZ.parse(time); // NOPMD by VMahadevan on 1/26/09 11:12 PM
+            return APP_TIME_FORMAT_WITH_TZ.parse(time); 
         } catch (ParseException ex) {
         }
+        
         try {
             return APP_TIME_FORMAT.parse(time);
         } catch (ParseException ex) {
         }
+        
         throw new RuntimeException("Unknown Time Format");
     }
 
@@ -188,7 +193,6 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
         return getTimeStr(inOneTimeZone, zone);
     }
 
-    @SuppressWarnings("PMD")
     public static String getTimeStr(final Date inOneTimeZone, final TimeZone zone) {
         final SimpleDateFormat fmt = (SimpleDateFormat) APP_TIME_FORMAT_WITH_TZ.clone();
         fmt.setTimeZone(zone);
@@ -204,7 +208,6 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
         return getDateStr(inOneTimeZone, zone);
     }
 
-    @SuppressWarnings("PMD")
     public static String getDateStr(final Date inOneTimeZone, final TimeZone zone) {
         final SimpleDateFormat fmt = (SimpleDateFormat) APP_DATE_TIME_FORMAT_WITH_TZ.clone();
         fmt.setTimeZone(zone);
