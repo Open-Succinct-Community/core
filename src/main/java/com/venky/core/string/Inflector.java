@@ -156,13 +156,6 @@ public class Inflector {
         return word;
     }
 
-    /**
-     * Converts a CamelCase string to underscores: "AliceInWonderLand" becomes:
-     * "alice_in_wonderland"
-     *
-     * @param camel camel case input
-     * @return result converted to underscores.
-     */
     public static String underscore(String camel) {
 
         List<Integer> upper = new ArrayList<Integer>();
