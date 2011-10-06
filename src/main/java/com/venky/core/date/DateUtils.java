@@ -187,33 +187,30 @@ public class DateUtils { // NOPMD by VMahadevan on 1/26/09 11:16 PM
     public static String getTimeStr(final Date time) {
         return getTimeStr(time, TimeZone.getDefault());
     }
-
-    public static String getTimeStr(final Date inOneTimeZone, final String tz) {
-        final TimeZone zone = SimpleTimeZone.getTimeZone(tz);
-        return getTimeStr(inOneTimeZone, zone);
+    public static String getTimeStr(final Date time,TimeZone zone) {
+        return getTimestampStr(time, zone,APP_TIME_FORMAT_WITH_TZ);
     }
 
-    public static String getTimeStr(final Date inOneTimeZone, final TimeZone zone) {
-        final SimpleDateFormat fmt = (SimpleDateFormat) APP_TIME_FORMAT_WITH_TZ.clone();
-        fmt.setTimeZone(zone);
-        return fmt.format(inOneTimeZone);
-    }
 
     public static String getDateStr(final Date date) {
-        return getDateStr(date, TimeZone.getDefault());
+        return getTimestampStr(date, TimeZone.getDefault(),APP_DATE_FORMAT);
     }
 
-    public static String getDateStr(final Date inOneTimeZone, final String tz) {
-        final TimeZone zone = SimpleTimeZone.getTimeZone(tz);
-        return getDateStr(inOneTimeZone, zone);
+    public static String getTimestampStr(final Date date){
+    	return getTimestampStr(date,TimeZone.getDefault(),APP_DATE_TIME_FORMAT_WITH_TZ);
     }
-
-    public static String getDateStr(final Date inOneTimeZone, final TimeZone zone) {
-        final SimpleDateFormat fmt = (SimpleDateFormat) APP_DATE_TIME_FORMAT_WITH_TZ.clone();
-        fmt.setTimeZone(zone);
+    
+    public static String getTimestampStr(final Date date,final String tz){
+    	TimeZone zone = SimpleTimeZone.getTimeZone(tz);
+    	return getTimestampStr(date,zone,APP_DATE_TIME_FORMAT_WITH_TZ);
+    }
+    
+    public static String getTimestampStr(final Date inOneTimeZone, final TimeZone zone, DateFormat datefmt) {
+    	DateFormat fmt = (DateFormat)datefmt.clone();
+		fmt.setTimeZone(zone);
         return fmt.format(inOneTimeZone);
     }
-
+    
     public static Date getDate(final Date inOneTimeZone, final String tz) {
         final TimeZone zone = SimpleTimeZone.getTimeZone(tz);
 
