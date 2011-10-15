@@ -26,7 +26,10 @@ public class StringUtil {
     	return String.valueOf(o == null? "" : o).trim();
     }
     public static String camelize(String underscorizedString) {
-        return Inflector.camelize(underscorizedString);
+        return camelize(underscorizedString,true);
+    }
+    public static String camelize(String underscorizedString,boolean capitalizeFirstChar) {
+        return Inflector.camelize(underscorizedString,capitalizeFirstChar);
     }
     
     public static String underscorize(String camel){
