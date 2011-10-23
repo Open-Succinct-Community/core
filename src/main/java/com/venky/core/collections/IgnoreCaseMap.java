@@ -1,8 +1,8 @@
 package com.venky.core.collections;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
-public class IgnoreCaseMap<V> extends HashMap<String, V>{
+public class IgnoreCaseMap<V> extends TreeMap<String, V>{
 	/**
 	 * 
 	 */
