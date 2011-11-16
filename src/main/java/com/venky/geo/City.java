@@ -13,10 +13,8 @@ import com.venky.geo.GeoCoder.Location;
  * @author venky
  */
 public class City {
-    private String name; 
     private Location location; 
     public City(String name){
-        this.name = name; 
         this.location = GeoCoder.getLocation(name);
     }
 

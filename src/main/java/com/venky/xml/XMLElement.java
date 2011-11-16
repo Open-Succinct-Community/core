@@ -125,7 +125,7 @@ public class XMLElement extends XMLNode {
     @Override
     public String toString() {
         Writer w = new StringWriter();
-        XMLSerializationHelper.serialize(inner, w, true);
+        XMLSerializationHelper.serialize(inner, w);
         return w.toString();
     }
 

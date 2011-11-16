@@ -51,7 +51,7 @@ public class XMLDocument {
     }
 
     public void serialize(File f) {
-        XMLSerializationHelper.serialize(getDocument(), f, true);
+        XMLSerializationHelper.serialize(getDocument(), f);
     }
 
     public void serialize(OutputStream os) {
@@ -59,7 +59,7 @@ public class XMLDocument {
     }
 
     public void serialize(Writer w) {
-        XMLSerializationHelper.serialize(getDocument(), w, true);
+        XMLSerializationHelper.serialize(getDocument(), w);
     }
 
     public static XMLDocument getDocumentFor(File f) {
@@ -79,7 +79,7 @@ public class XMLDocument {
     @Override
     public String toString() {
         Writer w = new StringWriter();
-        XMLSerializationHelper.serialize(getDocument(), w, true);
+        XMLSerializationHelper.serialize(getDocument(), w);
         return w.toString();
     }
 }
