@@ -1,5 +1,5 @@
 package com.venky.extension;
 
-public interface Extension<C> {
-	 public void invoke(C context);
+public interface Extension{
+	 public void invoke(Object... context);
 }
