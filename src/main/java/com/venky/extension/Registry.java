@@ -26,6 +26,10 @@ public class Registry {
 		}
 		return extensions;
 	}
+	public boolean hasExtensions(String extensionPoint){
+		return !getExtensions(extensionPoint).isEmpty();
+	}
+	
 	public void callExtensions(String pointName, Object... context){
 		for (Extension extn : getExtensions(pointName)){
 			extn.invoke(context);
