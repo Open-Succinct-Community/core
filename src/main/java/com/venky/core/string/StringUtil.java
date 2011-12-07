@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Properties;
+import java.util.Stack;
 
 /**
  *
@@ -64,5 +66,48 @@ public class StringUtil {
 			e.printStackTrace();
 		}
 		return builder.toString();
+    }
+    
+    public static String toWords(int number){
+    	return new NumberToWordsConverter(number).toString();
+    }
+    
+    public static String format(String template, Properties properties){
+    	StringBuilder formattedString = new StringBuilder();
+		char[] chars = template.toCharArray();
+		Stack<StringBuilder> variables = new Stack<StringBuilder>();
+		
+		for (int i = 0 ; i <chars.length ; i++){
+			if (chars[i] == '$'){
+				if (chars[i+1] == '{'){
+					variables.push(new StringBuilder());
+					i+=2;
+				}
+			}
+			if (variables.isEmpty()){
+				formattedString.append(chars[i]);
+			}else if (chars[i] != '}' ){
+				variables.peek().append(chars[i]);
+			}else {
+				StringBuilder variable = variables.pop();
+				if (!variables.isEmpty()){
+					if (properties.containsKey(variable.toString())){
+						variables.peek().append(properties.get(variable.toString()));
+					}else {
+						variables.peek().append("${"+variable.toString() +"}");
+					}
+				}else {
+					if (properties.containsKey(variable.toString())){
+						formattedString.append(properties.get(variable.toString()));
+					}else{
+						formattedString.append("${"+variable.toString() +"}");
+					}
+				}
+			}
+		}
+		while (!variables.isEmpty()){
+			formattedString.append("${"+variables.remove(0));
+		}
+		return formattedString.toString();
     }
 }
