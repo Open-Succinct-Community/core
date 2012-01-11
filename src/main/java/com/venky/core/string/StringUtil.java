@@ -21,7 +21,7 @@ public class StringUtil {
         if (s1 == null){
             return s2 == null; 
         }else {
-            return s1.equals(s2);
+            return valueOf(s1).equals(valueOf(s2));
         }
     }
     public static String valueOf(Object o){ 
