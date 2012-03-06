@@ -2,13 +2,34 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.venky</groupId>
+  <groupId>com.github.venkatramanm</groupId>
   <artifactId>core</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>core</name>
+  <description>Commonly used programming tasks in java</description>
   <url>http://maven.apache.org</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>LICENSE.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git@github.com:venkatramanm/core.git</connection>
+    <developerConnection>scm:git:git@github.com:venkatramanm/core.git</developerConnection>
+    <url>git@github.com:venkatramanm/core.git</url>
+  </scm>
+  <developers>
+    <developer> 
+      <id>venky</id>
+      <name>Venkatraman Mahadevan</name>
+      <email>venkatramanm@yahoo.com</email>
+    </developer>
+
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
