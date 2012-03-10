@@ -5,6 +5,7 @@
 package com.venky.core.string;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,16 +58,41 @@ public class StringUtil {
 			 int numCharsRead = 0;
 			 while ((numCharsRead = r.read(buffer)) > 0){
 				 builder.append(buffer,0,numCharsRead);
-				 if (numCharsRead < buffer.length){
-					 break;
-				 }
 			 }
-			 r.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				r.close();
+			}catch(IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 		return builder.toString();
     }
+    
+    public static byte[] readBytes(InputStream in){
+    	ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+    	
+    	byte[] buffer = new byte[1024];
+		 try {
+			 int numbytesRead = 0;
+			 while ((numbytesRead = in.read(buffer)) > 0){
+				 out.write(buffer,0,numbytesRead);
+			 }
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				in.close();
+			}catch(IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		return out.toByteArray();
+   }
+   
+   
     
     public static String toWords(int number){
     	return new NumberToWordsConverter(number).toString();
