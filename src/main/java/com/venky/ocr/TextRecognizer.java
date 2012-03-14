@@ -41,11 +41,11 @@ public class TextRecognizer {
 	private double getRelativeSizeThresholdFraction(){
 		return Double.valueOf(properties.getProperty("relativeSizeThresholdFraction","0.1")).doubleValue();
 	}
-	private int getMinColorThreshold(){
+	public int getMinColorThreshold(){
 		return Integer.valueOf(properties.getProperty("minColorThreshold","127")).intValue();
 	}
 	
-	private BufferedImage threshold(BufferedImage img){
+	public BufferedImage threshold(BufferedImage img){
 		return ImageUtil.threshold(img, getMinColorThreshold());
 	}
 
@@ -96,6 +96,20 @@ public class TextRecognizer {
 		}
 		public int middleColumn(){ 
 			return (startColumn + endColumn)/2;
+		}
+		
+		public int startRow(){
+			return startRow;
+		}
+		public int startColumn(){ 
+			return startColumn;
+		}
+		
+		public int endRow(){
+			return endRow;
+		}
+		public int endColumn(){
+			return endColumn;
 		}
 	}
 
@@ -172,6 +186,19 @@ public class TextRecognizer {
 		
 
 		Stack<CharacterRegion> characterImages = new Stack<TextRecognizer.CharacterRegion>();
+		
+		public CharacterRegion first(){
+			if (characterImages.isEmpty()){
+				return null;
+			}
+			return characterImages.get(0);
+		}
+		public CharacterRegion last(){ 
+			if (characterImages.isEmpty()){
+				return null;
+			}
+			return characterImages.peek();
+		}
 	}
 
 	public CharacterRegion trim(CharacterRegion i) {
