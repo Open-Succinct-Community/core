@@ -65,7 +65,7 @@ public class TextRecognizer {
 			}
 		}
 		histogram = new Histogram(trainingMap);
-		System.out.println(trainingMap.size());
+		//System.out.println(trainingMap.size());
 		assert trainingMap.size() == (126 - 33 + 1);
 	}
 	
@@ -558,7 +558,7 @@ public class TextRecognizer {
 		band.minHeight = minHeight; 
 		band.maxHeight = maxHeight;
 		band.maxWidth = maxWidth;
-		System.out.println(band);
+		//System.out.println(band);
 		return band;
 	}
 

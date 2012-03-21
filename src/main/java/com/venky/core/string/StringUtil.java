@@ -72,6 +72,9 @@ public class StringUtil {
     }
     
     public static byte[] readBytes(InputStream in){
+    	if (in == null){
+    		return new byte[]{};
+    	}
     	ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
     	
     	byte[] buffer = new byte[1024];
