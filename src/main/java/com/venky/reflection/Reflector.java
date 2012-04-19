@@ -23,7 +23,7 @@ public class Reflector<U, C extends U> {
     protected final Class<C> reflectedClass;
     protected final Class<U> upperBoundClass;
     protected final List<Method> allMethods ;
-    protected final List<Class<?>> classHierarchy ;
+    protected final List<Class<? extends U>> classHierarchy ;
     protected final List<Class<?>> classForest ;
     protected Reflector(Class<C> reflectedClass,Class<U> upperBoundClass){
     	assert(upperBoundClass != null);
@@ -33,17 +33,17 @@ public class Reflector<U, C extends U> {
     	this.reflectedClass = reflectedClass ;
     	this.upperBoundClass = upperBoundClass;
     	this.allMethods = new ArrayList<Method>(reflectedClass.getMethods().length);
-    	this.classHierarchy = new ArrayList<Class<?>>();
+    	this.classHierarchy = new ArrayList<Class<? extends U>>();
     	this.classForest = new ArrayList<Class<?>>();
     	
-        Class<?> rClass = reflectedClass;
+        Class<? extends U> rClass = reflectedClass;
         List<Class<?>> interfaces = new ArrayList<Class<?>>();
     	do {
     		loadMethods(rClass);
 			classHierarchy.add(rClass);
 			classForest.add(rClass);
 
-    		Class<?> parentClass = getParentClass(rClass,upperBoundClass);
+    		Class<? extends U> parentClass = (Class<? extends U>)getParentClass(rClass,upperBoundClass);
 
     		for (Class<?> i : rClass.getInterfaces()){
     			if (i == parentClass){
@@ -79,7 +79,7 @@ public class Reflector<U, C extends U> {
     }
     
     
-    public List<Class<?>> getClassHierarchy(){ 
+    public List<Class<? extends U>> getClassHierarchy(){ 
     	return classHierarchy;
     }
     
@@ -142,8 +142,14 @@ public class Reflector<U, C extends U> {
     	if (ret != null){
     		return ret;
     	}
-    	int modifiers = method.getModifiers();
+    	ret = computeMethodSignature(method);
+    	methodSignature.put(method, ret);
+    	return ret;
+    }
+    
+    public static String computeMethodSignature(Method method){
     	StringBuilder sign = new StringBuilder();
+    	int modifiers = method.getModifiers();
 		sign.append(Modifier.isPublic(modifiers) ? "public " : Modifier.isProtected(modifiers) ? "protected " : Modifier.isPrivate(modifiers)? "private " : "");
 		sign.append(method.getReturnType().toString() + " ");
 		sign.append(method.getName() + "(");
@@ -155,11 +161,7 @@ public class Reflector<U, C extends U> {
 			sign.append(pt[i]);
 		}
 		sign.append(")");
-
-    	
-		ret = sign.toString();
-    	methodSignature.put(method, ret);
-    	return ret;
+		return sign.toString();
     }
 
     private Map<String,List<Method>> methodsWithSameSignature = new HashMap<String, List<Method>>();

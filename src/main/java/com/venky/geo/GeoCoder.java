@@ -24,6 +24,12 @@ public class GeoCoder {
             this.lat = lat; 
             this.lng = lng;
         }
+        public float lat(){
+        	return lat;
+        }
+        public float lng(){
+        	return lng;
+        }
     }
     public static Location getLocation(String address){
         try {
