@@ -10,7 +10,7 @@
   <artifactId>core</artifactId>
   <packaging>jar</packaging>
   <name>core</name>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
 
   <description>Commonly used programming tasks in java</description>
   <url>http://maven.apache.org</url>
