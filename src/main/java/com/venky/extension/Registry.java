@@ -18,6 +18,7 @@ public class Registry {
 		List<Extension> extensions = getExtensions(name);
 		extensions.add(extension);
 	}
+	
 	public List<Extension> getExtensions(String extensionPoint){
 		List<Extension> extensions = extensionsMap.get(extensionPoint);
 		if (extensions == null){
@@ -34,5 +35,9 @@ public class Registry {
 		for (Extension extn : getExtensions(pointName)){
 			extn.invoke(context);
 		}
+	}
+	
+	public void clearExtensions(){
+		extensionsMap.clear();
 	}
 }
