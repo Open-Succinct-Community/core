@@ -178,7 +178,7 @@ public class Reflector<U, C extends U> {
         List<Method> methods = new ArrayList<Method>(); 
         methods.addAll(Arrays.asList(forClass.getDeclaredMethods()));
         try {
-            ClassReader reader = new ClassReader(getClass().getClassLoader().getResourceAsStream(forClass.getName().replace('.', '/')+ ".class"));
+            ClassReader reader = new ClassReader(forClass.getClassLoader().getResourceAsStream(forClass.getName().replace('.', '/')+ ".class"));
             ClassVisitorImpl mv = new ClassVisitorImpl();
             reader.accept(mv, 0);
 
