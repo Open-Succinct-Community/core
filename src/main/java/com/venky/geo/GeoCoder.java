@@ -37,19 +37,22 @@ public class GeoCoder {
             URL u = new URL(url);
             URLConnection connection = u.openConnection();
             XMLDocument doc = XMLDocument.getDocumentFor(connection.getInputStream());
-            XMLElement location = doc.getDocumentRoot().getChildElement("result").getChildElement("geometry").getChildElement("location");
-            float lat=-1; 
-            float lng=-1 ;
-            for (Iterator<XMLElement> nodeIterator =location.getChildElements() ; nodeIterator.hasNext();){
-                XMLElement node = nodeIterator.next();
-                if (node.getNodeName().equals("lat")){
-                    lat = Float.valueOf(node.getChildren().next().getNodeValue());
-                }else if (node.getNodeName().equals("lng")){
-                    lng = Float.valueOf(node.getChildren().next().getNodeValue());
+            XMLElement status = doc.getDocumentRoot().getChildElement("status");
+            if ("OK".equals(status.getNodeValue())){
+                XMLElement location = doc.getDocumentRoot().getChildElement("result").getChildElement("geometry").getChildElement("location");
+                float lat=-1; 
+                float lng=-1 ;
+                for (Iterator<XMLElement> nodeIterator =location.getChildElements() ; nodeIterator.hasNext();){
+                    XMLElement node = nodeIterator.next();
+                    if (node.getNodeName().equals("lat")){
+                        lat = Float.valueOf(node.getChildren().next().getNodeValue());
+                    }else if (node.getNodeName().equals("lng")){
+                        lng = Float.valueOf(node.getChildren().next().getNodeValue());
+                    }
                 }
+                return new Location(lat,lng);
             }
-            
-            return new Location(lat,lng);
+            return null;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
