@@ -2,11 +2,13 @@ package com.venky.core.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-public class SequenceSet<E> implements Set<E>{
+public class SequenceSet<E> implements Set<E> , Cloneable{
 	private ArrayList<E> list ;
 	private HashSet<E> set ;
 	
@@ -15,8 +17,20 @@ public class SequenceSet<E> implements Set<E>{
 		list = new ArrayList<E>();
 	}
 
+	public List<E> list() {
+		return Collections.unmodifiableList(list);
+	}
+	
 	public E first(){
 		return list.get(0);
+	}
+	
+	public int indexOf(E o){
+		return list.indexOf(o);
+	}
+	
+	public E get(int index){
+		return list.get(index);
 	}
 	
 	public int size() {
@@ -93,5 +107,33 @@ public class SequenceSet<E> implements Set<E>{
 	public void clear() {
 		set.clear();
 		list.clear();
-	} 
+	}
+	
+	@Override
+	public Object clone(){
+		try {
+			SequenceSet<E> set = (SequenceSet<E>)super.clone();
+			set.list = (ArrayList)this.list.clone();
+			set.set = (HashSet)this.set.clone();
+			set.addAll(this);
+			return set;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public String toString(){
+		return list.toString();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return set.equals(o);
+	}
+
+	@Override
+	public int hashCode(){
+		return set.hashCode();
+	}
 }

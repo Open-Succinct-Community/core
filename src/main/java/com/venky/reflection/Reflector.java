@@ -89,15 +89,7 @@ public class Reflector<U, C extends U> {
 
     
     public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass){
-    	boolean present = false;
-    	
-    	for (Class<?> clazz:getClassForest()){
-    		present = clazz.isAnnotationPresent(annotationClass);
-    		if (present){
-    			break;
-    		}
-    	}
-    	return present;
+    	return getAnnotation(annotationClass) != null; 
     }
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass){
     	T annotation = null;
@@ -111,22 +103,10 @@ public class Reflector<U, C extends U> {
     }
 
     public boolean isAnnotationPresent(Method method, Class<? extends Annotation> annotationClass){
-    	if (method.isAnnotationPresent(annotationClass)){
-    		return true;
-    	}
-    	boolean present = false;
-    	List<Method> methods = getMethodsForSignature(getMethodSignature(method)); 
-    	for (int i = 0 ; !present && i < methods.size() ; i ++){
-    		Method m = methods.get(i);
-    		present = m.isAnnotationPresent(annotationClass);
-    	}
-    	return present;
+    	return getAnnotation(method,annotationClass) != null;
     }
     
     public <T extends Annotation> T getAnnotation(Method method,Class<T> annotationClass){
-    	if (method.isAnnotationPresent(annotationClass)){
-    		return method.getAnnotation(annotationClass);
-    	}
     	T annotation = null;
     	List<Method> methods = getMethodsForSignature(getMethodSignature(method)); 
     	for (int i = 0 ; annotation == null && i < methods.size() ; i ++){

@@ -60,7 +60,7 @@ public class IgnoreCaseSet extends AbstractIgnoreCaseCollection implements Sorte
 			clone.inner = (TreeSet<String>)this.inner.clone();
 			return clone;
 		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
+			throw new RuntimeException(e);
 		}
 	}
 
