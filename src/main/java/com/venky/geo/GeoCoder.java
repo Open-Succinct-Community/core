@@ -9,6 +9,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.logging.Logger;
+
 import com.venky.xml.XMLDocument;
 import com.venky.xml.XMLElement;
 
@@ -17,7 +19,8 @@ import com.venky.xml.XMLElement;
  * @author venky
  */
 public class GeoCoder {
-    private static final String WSURL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=";
+    private static final GeoSP[] sps = { new Nominatim() , new Google()};
+    
     public static class Location {
         float lat,lng; 
         public Location(float lat, float lng){
@@ -30,32 +33,75 @@ public class GeoCoder {
         public float lng(){
         	return lng;
         }
+        public String toString(){
+        	return "(lat,lng):(" + lat + "," + lng + ")";
+        }
     }
     public static Location getLocation(String address){
-        try {
-            String url = WSURL + URLEncoder.encode(address,"UTF-8");
-            URL u = new URL(url);
-            URLConnection connection = u.openConnection();
-            XMLDocument doc = XMLDocument.getDocumentFor(connection.getInputStream());
-            XMLElement status = doc.getDocumentRoot().getChildElement("status");
-            if ("OK".equals(status.getNodeValue())){
-                XMLElement location = doc.getDocumentRoot().getChildElement("result").getChildElement("geometry").getChildElement("location");
-                float lat=-1; 
-                float lng=-1 ;
-                for (Iterator<XMLElement> nodeIterator =location.getChildElements() ; nodeIterator.hasNext();){
-                    XMLElement node = nodeIterator.next();
-                    if (node.getNodeName().equals("lat")){
-                        lat = Float.valueOf(node.getChildren().next().getNodeValue());
-                    }else if (node.getNodeName().equals("lng")){
-                        lng = Float.valueOf(node.getChildren().next().getNodeValue());
-                    }
-                }
-                return new Location(lat,lng);
-            }
-            return null;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        
+    	for (GeoSP sp : sps){
+           Location loc = sp.getLocation(address);
+           if (loc != null){
+        	   Logger.getLogger(GeoCoder.class.getName()).info("Lat,Lon found using " + sp.getClass().getSimpleName());
+        	   return loc;
+           }
+    	}
+    	return null;
     }
+    private static interface GeoSP {
+    	public Location getLocation(String address);
+    }
+    private static class Google implements GeoSP {
+    	private static final String WSURL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=";
+		public Location getLocation(String address) {
+        	try {
+	            String url = WSURL + URLEncoder.encode(address,"UTF-8");
+	            URL u = new URL(url);
+	            URLConnection connection = u.openConnection();
+	            XMLDocument doc = XMLDocument.getDocumentFor(connection.getInputStream());
+	            XMLElement status = doc.getDocumentRoot().getChildElement("status");
+	            if ("OK".equals(status.getNodeValue())){
+	                XMLElement location = doc.getDocumentRoot().getChildElement("result").getChildElement("geometry").getChildElement("location");
+	                float lat=-1; 
+	                float lng=-1 ;
+	                for (Iterator<XMLElement> nodeIterator =location.getChildElements() ; nodeIterator.hasNext();){
+	                    XMLElement node = nodeIterator.next();
+	                    if (node.getNodeName().equals("lat")){
+	                        lat = Float.valueOf(node.getChildren().next().getNodeValue());
+	                    }else if (node.getNodeName().equals("lng")){
+	                        lng = Float.valueOf(node.getChildren().next().getNodeValue());
+	                    }
+	                }
+	            	Logger.getLogger(getClass().getName()).info("URL:" + url);
+	                return new Location(lat,lng);
+	            }
+	        } catch (IOException e) {
+	           Logger.getLogger(getClass().getName()).warning(e.getMessage());
+	        }
+        	return null;
+		}
+    	
+    }
+    private static class Nominatim implements GeoSP {
+    	private static final String WSURL = "http://nominatim.openstreetmap.org/search?format=xml&polygon=0&q=";
+		public Location getLocation(String address) {
+			try {
+	            String url = WSURL + URLEncoder.encode(address,"UTF-8");
+	            URL u = new URL(url);
+	            URLConnection connection = u.openConnection();
+	            XMLDocument doc = XMLDocument.getDocumentFor(connection.getInputStream());
+	            XMLElement place = doc.getDocumentRoot().getChildElement("place");
+	            
+	            if (place != null){
+	            	Logger.getLogger(getClass().getName()).info("URL:" + url);
+	                float lat= Float.valueOf(place.getAttribute("lat")); 
+	                float lng= Float.valueOf(place.getAttribute("lon")) ;
+	                return new Location(lat,lng);
+	            }
+	        } catch (IOException e) {
+	           Logger.getLogger(getClass().getName()).warning(e.getMessage());
+	        }
+        	return null;		
+    	}
+    }
+
 }
