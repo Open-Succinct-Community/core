@@ -1,7 +1,7 @@
 package com.venky.core.math;
 
-import com.venky.core.math.GCDFinder;
 import junit.framework.Assert;
+
 import org.junit.Test;
 
 

@@ -18,12 +18,12 @@ limitations under the License.
 
 
 package com.venky.core.string;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Inflector {
 
