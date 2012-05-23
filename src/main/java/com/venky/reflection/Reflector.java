@@ -3,7 +3,6 @@ package com.venky.reflection;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -115,33 +114,10 @@ public class Reflector<U, C extends U> {
     	}
     	return annotation;
     }
-
-    private Map<Method,String> methodSignature = new HashMap<Method, String>();
-    protected String getMethodSignature(Method method){
-    	String ret = methodSignature.get(method);
-    	if (ret != null){
-    		return ret;
-    	}
-    	ret = computeMethodSignature(method);
-    	methodSignature.put(method, ret);
-    	return ret;
-    }
     
-    public static String computeMethodSignature(Method method){
-    	StringBuilder sign = new StringBuilder();
-    	int modifiers = method.getModifiers();
-		sign.append(Modifier.isPublic(modifiers) ? "public " : Modifier.isProtected(modifiers) ? "protected " : Modifier.isPrivate(modifiers)? "private " : "");
-		sign.append(method.getReturnType().toString() + " ");
-		sign.append(method.getName() + "(");
-		Class<?>[] pt = method.getParameterTypes();
-		for (int i = 0 ; i< pt.length ; i++ ){
-			if (i > 0){
-				sign.append(",");
-			}
-			sign.append(pt[i]);
-		}
-		sign.append(")");
-		return sign.toString();
+    private MethodSignatureCache signatureCache = new MethodSignatureCache(); 
+    public String getMethodSignature(Method method){
+    	return signatureCache.get(method);
     }
 
     private Map<String,List<Method>> methodsWithSameSignature = new HashMap<String, List<Method>>();

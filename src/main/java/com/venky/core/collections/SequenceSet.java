@@ -6,9 +6,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
-public class SequenceSet<E> implements Set<E> , Cloneable{
+public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	private ArrayList<E> list ;
 	private HashSet<E> set ;
 	
@@ -25,7 +26,7 @@ public class SequenceSet<E> implements Set<E> , Cloneable{
 		return list.get(0);
 	}
 	
-	public int indexOf(E o){
+	public int indexOf(Object o){
 		return list.indexOf(o);
 	}
 	
@@ -135,5 +136,54 @@ public class SequenceSet<E> implements Set<E> , Cloneable{
 	@Override
 	public int hashCode(){
 		return set.hashCode();
+	}
+
+	public boolean addAll(int index, Collection<? extends E> c) {
+		Iterator<? extends E> i = c.iterator();
+		boolean ret = false;
+		while (i.hasNext()){
+			ret = add(i.next()) || ret;
+		}
+		return ret;
+	}
+
+	public E set(int index, E element) {
+		E old = remove(index);
+		add(index,element);
+		return old;
+	}
+
+	public void add(int index, E element) {
+		if (contains(element)){
+			int idx = list.indexOf(element);
+			list.remove(idx);
+			list.add(index,element);
+		}else {
+			set.add(element);
+			list.add(index,element);
+		}
+		
+	}
+
+	public E remove(int index) {
+		E o = get(index);
+		remove(o);
+		return o;
+	}
+
+	public int lastIndexOf(Object o) {
+		return indexOf(o);
+	}
+
+	public ListIterator<E> listIterator() {
+		return Collections.unmodifiableList(list).listIterator();
+	}
+
+	public ListIterator<E> listIterator(int index) {
+		return Collections.unmodifiableList(list).listIterator(index);
+	}
+
+	public List<E> subList(int fromIndex, int toIndex) {
+		return Collections.unmodifiableList(list).subList(fromIndex, toIndex);
 	}
 }
