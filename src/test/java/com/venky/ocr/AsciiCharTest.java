@@ -7,7 +7,7 @@ public class AsciiCharTest {
 	@Test 
 	public void testGenerateCharacters() {
 		for (int i = 32; (char)i <= '~'  ; i ++){
-			System.out.println(i + " :" + (char)i + " ");
+			System.out.print((char)i + " ");
 		}
 	}
 

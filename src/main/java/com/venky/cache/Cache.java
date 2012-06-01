@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public abstract class Cache<K,V> {
@@ -37,7 +38,7 @@ public abstract class Cache<K,V> {
 				accessTimeMap.clear();
 				return;
 			}
-			Map<Long,List<K>> keysAccessedByTime = new TreeMap<Long, List<K>>(); 
+			SortedMap<Long,List<K>> keysAccessedByTime = new TreeMap<Long, List<K>>(); 
 			for (K key : accessTimeMap.keySet()){
 				Long time = accessTimeMap.get(key);
 				List<K> keys = keysAccessedByTime.get(time);
@@ -71,13 +72,35 @@ public abstract class Cache<K,V> {
 	public V get(K key){
 		V v = cacheMap.get(key);
 		if (v == null && !cacheMap.containsKey(key)){
-			makeSpace();
-			v = getValue(key);
-			cacheMap.put(key, v);
+			synchronized (cacheMap) {
+				v = cacheMap.get(key);
+				if (v == null && !cacheMap.containsKey(key)){
+					makeSpace();
+					v = getValue(key);
+					cacheMap.put(key, v);
+				}
+			}
 		}
 		accessTimeMap.put(key, System.currentTimeMillis());
 		return v;
 	}
 	
+	public void remove(K key){
+		synchronized (cacheMap) {
+			cacheMap.remove(key);
+			accessTimeMap.remove(key);
+		}
+	}
+	
+	public void put(K key,V value){
+		synchronized (cacheMap) {
+			cacheMap.put(key, value);
+			accessTimeMap.put(key, System.currentTimeMillis());
+		}
+	}
+	
 	protected abstract V getValue(K k);
+	public Long accessTime(K k){
+		return accessTimeMap.get(k);
+	}
 }

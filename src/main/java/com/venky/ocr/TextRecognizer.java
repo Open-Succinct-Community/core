@@ -19,9 +19,14 @@ import java.util.TreeSet;
 import javax.imageio.ImageIO;
 
 public class TextRecognizer {
-
+	private boolean debug = false ;
+	
+	public boolean isDebug() {
+		return debug;
+	}
+	
 	public TextRecognizer() {
-		this("monospace");
+		this("monospace",false);
 	}
 
 	private Properties properties = new Properties();
@@ -49,17 +54,24 @@ public class TextRecognizer {
 		return ImageUtil.threshold(img, getMinColorThreshold());
 	}
 
-	public TextRecognizer(String font) {
+	
+	public TextRecognizer(String font,boolean debug) {
+		this.debug = debug;
 		load(font, properties);
 		List<Line> lines = getLines(read("/com/venky/ocr/"+ font + ".jpg"), getMinCharacterWidth());
 		assert (lines.size() >= 1);
 		String trainingCharacters = getLimitedTrainingCharacters();
 		int c = 33;
+		int i = 0 ;
 		for (Line line : lines) {
 			for (CharacterRegion cr : line.characterImages) {
 				if (trainingCharacters == null
 						|| trainingCharacters.indexOf(c) >= 0) {
 					trainingMap.put(((char) c), cr);
+				}
+				if (isDebug()){
+					cr.write("debug/training-"+i +".jpg");
+					i++;
 				}
 				c++;
 			}
@@ -336,8 +348,8 @@ public class TextRecognizer {
 
 	private void recognize(Line line, StringBuffer out) {
 		CandidateBand band = getCandidateBand(line);
-		
 		CharacterRegion prevCharRegion = null;
+		int i = 1;
 		for (CharacterRegion charRegion : line.characterImages) {
 			if (prevCharRegion != null) {
 				double widthOfSpace = charRegion.startColumn - prevCharRegion.endColumn;
@@ -346,6 +358,10 @@ public class TextRecognizer {
 				}
 			}
 			prevCharRegion = charRegion;
+			if (isDebug()){
+				charRegion.write("debug/"+i+".jpg");
+				i++;
+			}
 			recognize(charRegion,band, out);
 		}
 		out.append(System.getProperty("line.separator"));
@@ -404,7 +420,7 @@ public class TextRecognizer {
 		Set<Character> bestKeys = new HashSet<Character>();
 		double bestError = Double.POSITIVE_INFINITY;
 		for (Character key : against) {
-			CharacterRegion trainedRegion = trainingMap.get(key);
+			CharacterRegion trainedRegion = trainingMap.get(key); 
 			double error = distanceBetween(trainedRegion, currentRegion);
 			
 			if (error > bestError) {
@@ -422,22 +438,51 @@ public class TextRecognizer {
 	}
 
 	private boolean muchGreaterThan(double x1 , double x2){
-		if (x1 - x2 < getRelativeSizeThresholdFraction() * Math.max(x1,x2)){
+		if (x1 - x2 < getRelativeSizeThresholdFraction() * (x1+x2)){
 			return false; 
 		}
 		return true;
+	}
+	private boolean wayOff(CharacterRegion c1 , CharacterRegion c2){
+		double h1 = c1.height();
+		double h2 = c2.height();
+		
+		double w1 = c1.width();
+		double w2 = c2.width();
+		
+		if (h1 <= h2 && muchGreaterThan(w1,w2)){ 
+			return true;
+		}
+		
+		if (h2 <= h1 && muchGreaterThan(w2,w1)){
+			return true;
+		}
+		
+		if (w1 <= w2 && muchGreaterThan(h1, h2)){
+			return true;
+		}
+		
+		if (w2 <= w1 && muchGreaterThan(h2, h1)){
+			return true;
+		}
+		
+		if (h1 <= h2 && w1 <= w2){
+			if (muchGreaterThan(h2/h1, w2/w1) || muchGreaterThan(w2/w1, h2/h1)){
+				return true;
+			}
+		}else if (h2 <= h1 && w2 <= w1){
+			if (muchGreaterThan(h1/h2, w1/w2) || muchGreaterThan(w1/w2, h1/h2)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private double distanceBetween(CharacterRegion trainedRegion, CharacterRegion testingRegion) {
 		CharacterRegion r1 = trainedRegion;
 		CharacterRegion r2 = testingRegion;
 
-		if (
-				r1.height() < r2.height() && muchGreaterThan(r1.width(), r2.width()) 
-				|| r2.height() < r1.height() && muchGreaterThan(r2.width(), r1.width()) 
-				|| r1.width() < r2.width() && muchGreaterThan(r1.height(), r2.height())
-				|| r2.width() < r1.width() && muchGreaterThan(r2.height(), r1.height())
-				){
+		if (wayOff(r1, r2)){
 			return Double.POSITIVE_INFINITY;
 		}
 		//NEW 
@@ -474,17 +519,20 @@ public class TextRecognizer {
 		
 		return ImageUtil.distanceBetween(i1, i2);
 	}
-
-	public StringBuffer recognize(File in) throws IOException {
-		return recognize(ImageIO.read(in));
+	public StringBuffer recognize(File in) throws IOException{
+		return recognize(in,1);
 	}
-	
-	public StringBuffer recognize(InputStream in) throws IOException {
-		return recognize(ImageIO.read(in));
+	public StringBuffer recognize(File in,int minCharWidth) throws IOException {
+		return recognize(ImageIO.read(in),minCharWidth);
 	}
-	public StringBuffer recognize(BufferedImage in) throws IOException {
-		
-		List<Line> lines = getLines(in);
+	public StringBuffer recognize(InputStream in) throws IOException{
+		return recognize(in,1);
+	}
+	public StringBuffer recognize(InputStream in,int minCharWidth) throws IOException {
+		return recognize(ImageIO.read(in),minCharWidth);
+	}
+	public StringBuffer recognize(BufferedImage in, int minCharWidth) throws IOException {
+		List<Line> lines = getLines(in,minCharWidth);
 
 		StringBuffer out = new StringBuffer();
 		for (Line line : lines) {

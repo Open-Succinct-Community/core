@@ -7,12 +7,18 @@ import junit.framework.Assert;
 import org.junit.Test;
  
 public class TextRecognitionTest {
+	@Test
+	public void testTestFile() throws IOException{
+		TextRecognizer monospace = new TextRecognizer();
+		StringBuffer out = monospace.recognize(getClass().getResourceAsStream("/com/venky/ocr/monospace.jpg"),8);
+		System.out.println(out.toString());
+		Assert.assertEquals("","! \" # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~",out.toString().trim());
+	}
 
 	@Test
 	public void testHistogram(){
 		TextRecognizer monospace = new TextRecognizer();
 		monospace.getHistogram().printHeightDistribution();
-		//r.getHistogram().printWidthDistribution();
 	}
 	@Test
 	public void testf() throws IOException {

@@ -9,6 +9,16 @@ public class StringReader extends java.io.StringReader{
 	}
 
 	@Override
+	public boolean markSupported() {
+		return false;
+	}
+
+	@Override
+	public void mark(int readAheadLimit) throws IOException {
+		throw new IOException("mark not supported");
+	}
+
+	@Override
 	public void close() {
 		try {
 			super.reset();
