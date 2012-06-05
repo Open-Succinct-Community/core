@@ -134,17 +134,19 @@ public class Reflector<U, C extends U> {
         List<Method> methods = new ArrayList<Method>(); 
         methods.addAll(Arrays.asList(forClass.getDeclaredMethods()));
         try {
-            ClassReader reader = new ClassReader(forClass.getClassLoader().getResourceAsStream(forClass.getName().replace('.', '/')+ ".class"));
-            ClassVisitorImpl mv = new ClassVisitorImpl();
-            reader.accept(mv, 0);
-
-            final Map<String,Integer> mSeq = mv.getMethodSequenceMap();
-            Collections.sort(methods,new Comparator<Method>(){
-                public int compare(Method o1, Method o2) {
-                    return mSeq.get(o1.getName()).compareTo(mSeq.get(o2.getName()));
-                }
-            });
-            
+        	ClassLoader cl = forClass.getClassLoader();
+        	if (cl != null){
+	            ClassReader reader = new ClassReader(cl.getResourceAsStream(forClass.getName().replace('.', '/')+ ".class"));
+	            ClassVisitorImpl mv = new ClassVisitorImpl();
+	            reader.accept(mv, 0);
+	
+	            final Map<String,Integer> mSeq = mv.getMethodSequenceMap();
+	            Collections.sort(methods,new Comparator<Method>(){
+	                public int compare(Method o1, Method o2) {
+	                    return mSeq.get(o1.getName()).compareTo(mSeq.get(o2.getName()));
+	                }
+	            });
+        	}
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
