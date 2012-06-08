@@ -1,13 +1,18 @@
 package com.venky.cache;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public abstract class Cache<K,V> {
+import com.venky.core.util.ObjectUtil;
+
+public abstract class Cache<K,V> implements Cloneable , Serializable{
+	
+	private static final long serialVersionUID = -283813228653492140L;
 	
 	public static final int MAX_ENTRIES_DEFAULT = 1000;
 	public static final int MAX_ENTRIES_UNLIMITED = 0;
@@ -62,12 +67,29 @@ public abstract class Cache<K,V> {
  		}
 	}
 
+	public Cache<K,V> clone(){
+		try {
+			Cache<K,V> clone = (Cache<K,V>)super.clone();
+			clone.accessTimeMap = (HashMap<K, Long>)accessTimeMap.clone();
+			clone.cacheMap = (HashMap<K, V>)cacheMap.clone();
+			for (K k :clone.cacheMap.keySet()){
+				clone.cacheMap.put(k, ObjectUtil.clone(clone.get(k)));
+			}
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	public int size(){
 		return cacheMap.size();
 	}
 	
-	private Map<K,V> cacheMap = new HashMap<K, V>();
-	private Map<K,Long> accessTimeMap = new HashMap<K, Long>();
+	public Set<K> keySet(){
+		return cacheMap.keySet();
+	}
+	
+	private HashMap<K,V> cacheMap = new HashMap<K, V>();
+	private HashMap<K,Long> accessTimeMap = new HashMap<K, Long>();
 	
 	public V get(K key){
 		V v = cacheMap.get(key);

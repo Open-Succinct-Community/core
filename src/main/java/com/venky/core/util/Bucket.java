@@ -3,12 +3,22 @@
  * and open the template in the editor.
  */
 package com.venky.core.util;
+
+import java.io.Serializable;
+
+import com.venky.core.checkpoint.Mergeable;
+
 /**
  *
  * @author venky
  */
-public class Bucket implements Cloneable{
-    private double counter;
+public class Bucket implements Cloneable, Serializable, Mergeable<Bucket>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3777328906346580670L;
+	private double counter;
+	
     public Bucket(){
         this(0.0);
     }
@@ -51,5 +61,10 @@ public class Bucket implements Cloneable{
         }
         return (Bucket)clone;
     }
+    
+	public void merge(Bucket another) {
+		this.counter = another.counter;
+	}
+	
            
 }
