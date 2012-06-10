@@ -1,60 +1,91 @@
 package com.venky.core.checkpoint;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.venky.core.util.ObjectUtil;
 
-public class MergeableMap <K ,V> extends HashMap<K, V> implements Mergeable<Map<K, V>>{
+public class MergeableMap <K ,V> implements Serializable, Map<K,V> , Mergeable<Map<K, V>> , Cloneable{
+	
 
 	private static final long serialVersionUID = -7236530815567656228L;
-
-	public MergeableMap() {
-		super();
+	private Map<K,V> proxyMap;
+	public MergeableMap(){
+		this(new HashMap<K, V>());
 	}
-
-	public MergeableMap(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
+	public MergeableMap(Map<K,V> proxyMap){
+		this.proxyMap = proxyMap;
 	}
-
-	public MergeableMap(int initialCapacity) {
-		super(initialCapacity);
-	}
-
-	public MergeableMap(Map<? extends K, ? extends V> m) {
-		super(m);
-	}
-
-	public void merge(Map<K, V> another) {
-		if (another == null){
-			throw new NullPointerException("Null parameter passed");
-		}
-		Iterator<K> ki = keySet().iterator();
-		
-		while (ki.hasNext()){
-			K k = ki.next();
-			if (!another.containsKey(k)){
-				ki.remove();
-			}
-		}
-		
-		for (K k :another.keySet()){
-			if (!containsKey(k)){
-				put(k,another.get(k));
-			}else {
-				V v = get(k);
-				V anotherV = another.get(k);
-				if (!ObjectUtil.equals(v, anotherV)){
-					if (v != null && v instanceof Mergeable){
-						((Mergeable) v).merge(anotherV);
-					}else  {
-						put(k,anotherV);
+	
+	@Override
+	public MergeableMap<K, V> clone(){
+		try {
+			MergeableMap<K, V> clone = (MergeableMap<K, V>) super.clone();
+			clone.proxyMap = ObjectUtil.clone(proxyMap);
+			if (clone.proxyMap != proxyMap){
+				for (K k:proxyMap.keySet()){
+					V v = proxyMap.get(k);
+					if (v == null){
+						continue;
+					}
+					V vInClone  = clone.proxyMap.get(k); 
+					if (v != vInClone){
+						// Value is already cloned. So skip this step entirely. 
+						break;
+					}else {
+						//Shallow Cloned. .. Try to clone values.
+						clone.proxyMap.put(k, ObjectUtil.clone(vInClone));
 					}
 				}
 			}
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException("Should have never happend!",e);
 		}
-		
+	}
+
+	public void merge(Map<K, V> another) {
+		ObjectUtil.mergeValues(another, this);
+	}
+	public int size() {
+		return proxyMap.size();
+	}
+	public boolean isEmpty() {
+		return proxyMap.isEmpty();
+	}
+	public boolean containsKey(Object key) {
+		return proxyMap.containsKey(key);
+	}
+	public boolean containsValue(Object value) {
+		return proxyMap.containsValue(value);
+	}
+	public V get(Object key) {
+		return proxyMap.get(key);
+	}
+	public V put(K key, V value) {
+		return proxyMap.put(key,value);
+	}
+	public V remove(Object key) {
+		return proxyMap.remove(key);
+	}
+	
+	public void putAll(Map<? extends K, ? extends V> m) {
+		proxyMap.putAll(m);
+	}
+	public void clear() {
+		proxyMap.clear();
+	}
+	public Set<K> keySet() {
+		return proxyMap.keySet();
+	}
+	public Collection<V> values() {
+		return proxyMap.values();
+	}
+	public Set<java.util.Map.Entry<K, V>> entrySet() {
+		return proxyMap.entrySet();
 	}
 	
 }

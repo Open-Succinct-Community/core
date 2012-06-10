@@ -1,6 +1,5 @@
 package com.venky.cache;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +9,7 @@ import java.util.TreeMap;
 
 import com.venky.core.util.ObjectUtil;
 
-public abstract class Cache<K,V> implements Cloneable , Serializable{
-	
-	private static final long serialVersionUID = -283813228653492140L;
+public abstract class Cache<K,V> implements Cloneable {
 	
 	public static final int MAX_ENTRIES_DEFAULT = 1000;
 	public static final int MAX_ENTRIES_UNLIMITED = 0;

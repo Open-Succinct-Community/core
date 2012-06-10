@@ -2,12 +2,15 @@ package com.venky.core.checkpoint;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<Set<E>> , Serializable{
+import com.venky.core.util.ObjectUtil;
 
-	private final Set<E> set;
+public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<Set<E>> , Serializable, Cloneable{
+
+	private Set<E> set;
 	public int size() {
 		return set.size();
 	}
@@ -67,7 +70,9 @@ public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<S
 	public int hashCode() {
 		return set.hashCode();
 	}
-
+	public MergeableSet(){
+		this(new HashSet<E>());
+	}
 	public MergeableSet(Set<E> set){
 		this.set = set;
 	}
@@ -75,24 +80,37 @@ public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<S
 	private static final long serialVersionUID = 8174625181602888314L;
 
 	public void merge(Set<E> another) {
-		if (another == null){
-			throw new NullPointerException("Null parameter passed");
-		}
-		
-		Iterator<E> i = iterator();
-		while (i.hasNext()){
-			E e = i.next();
-			if (!another.contains(e)){
-				i.remove();
-			}
- 		}
-		for (E e : another){
-			if (!contains(e)){
-				add(e);
-			}
-		}
+		ObjectUtil.mergeValues(another, this);
 	}
 
+	public MergeableSet<E> clone(){
+		try {
+			MergeableSet<E> clone = (MergeableSet<E>) super.clone();
+			clone.set = ObjectUtil.clone(set);
+			if (clone.set != set){
+				//Clone successful. Trying to clone deeper by cloning values.
+				boolean isShallow = false;
+				Iterator<E> i = clone.set.iterator();
+				while (i.hasNext() && !isShallow){
+					E e = i.next();
+					if (e != null){
+						for (E selfE: set){
+							if (selfE == e){
+								isShallow = true;
+								break;
+							}
+						}
+					}
+				}
+				if (isShallow){
+					ObjectUtil.cloneValues(clone.set);
+				}
+			}
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 
 }

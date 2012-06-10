@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import com.venky.core.util.ObjectUtil;
+
 public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	private ArrayList<E> list ;
 	private HashSet<E> set ;
@@ -114,9 +116,13 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	public Object clone(){
 		try {
 			SequenceSet<E> set = (SequenceSet<E>)super.clone();
-			set.list = (ArrayList)this.list.clone();
-			set.set = (HashSet)this.set.clone();
-			set.addAll(this);
+			set.list = new ArrayList<E>();
+			for (E e :this){
+				E clone = ObjectUtil.clone(e);
+				set.list.add(clone);
+			}
+			set.set =  new HashSet<E>();
+			set.set.addAll(set.list);
 			return set;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);

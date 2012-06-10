@@ -2,10 +2,10 @@ package com.venky.core.collections;
 
 import java.util.TreeMap;
 
-public class IgnoreCaseMap<V> extends TreeMap<String, V>{
-	/**
-	 * 
-	 */
+import com.venky.core.checkpoint.Mergeable;
+import com.venky.core.util.ObjectUtil;
+
+public class IgnoreCaseMap<V> extends TreeMap<String, V> implements Cloneable, Mergeable<IgnoreCaseMap<V>>{
 	private static final long serialVersionUID = 5311588254312204361L;
 
 	protected String ucase(Object other){
@@ -32,5 +32,14 @@ public class IgnoreCaseMap<V> extends TreeMap<String, V>{
 		return super.remove(ucase(key));
 	}
 
+	public IgnoreCaseMap<V> clone(){
+		IgnoreCaseMap<V> clone = (IgnoreCaseMap<V>) super.clone();
+		ObjectUtil.cloneValues(clone);
+		return clone;
+	}
+
+	public void merge(IgnoreCaseMap<V> another) {
+		ObjectUtil.mergeValues(another,this);
+	}
 
 }

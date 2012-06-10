@@ -5,7 +5,10 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class IgnoreCaseSet extends AbstractIgnoreCaseCollection implements SortedSet<String>,Cloneable{
+import com.venky.core.checkpoint.Mergeable;
+import com.venky.core.util.ObjectUtil;
+
+public class IgnoreCaseSet extends AbstractIgnoreCaseCollection implements SortedSet<String>,Cloneable, Mergeable<IgnoreCaseSet>{
 	private TreeSet<String> inner = new TreeSet<String>();
 
 	public boolean equals(Object o) {
@@ -53,7 +56,7 @@ public class IgnoreCaseSet extends AbstractIgnoreCaseCollection implements Sorte
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object clone() {
+	public IgnoreCaseSet clone() {
 		IgnoreCaseSet clone;
 		try {
 			clone = (IgnoreCaseSet)super.clone();
@@ -90,5 +93,9 @@ public class IgnoreCaseSet extends AbstractIgnoreCaseCollection implements Sorte
 
 	public String last() {
 		return inner.last();
+	}
+
+	public void merge(IgnoreCaseSet another) {
+		ObjectUtil.mergeValues(another, this);
 	}
 }

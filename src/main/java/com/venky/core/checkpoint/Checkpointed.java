@@ -1,15 +1,15 @@
 package com.venky.core.checkpoint;
 
-import java.io.Serializable;
 import java.util.Stack;
 
 import com.venky.core.util.ObjectUtil;
 
-public class Checkpointed<M extends Serializable> implements Checkpointable<M>{
+public class Checkpointed<M> implements Checkpointable<M>{
 	private Stack<Checkpoint<M>> checkpoints = new Stack<Checkpoint<M>>();
 
 	private M initial ;
 	public Checkpointed(M m){
+		
 		initial = m;
 	}
 
