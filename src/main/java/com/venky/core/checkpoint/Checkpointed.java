@@ -72,12 +72,10 @@ public class Checkpointed<M> implements Checkpointable<M>{
 		M finalValue = getCurrentValue();
 		rollback(cp);
 		M initialValue = getCurrentValue();
-		if (!ObjectUtil.equals(finalValue, initialValue)){
-			if (initialValue != null && initialValue instanceof Mergeable){
-				((Mergeable<M>)initialValue).merge(finalValue);
-			}else {
-				setValue(finalValue);
-			}
+		if (initialValue != null && initialValue instanceof Mergeable){
+			((Mergeable<M>)initialValue).merge(finalValue);
+		}else {
+			setValue(finalValue);
 		}
 	}
 

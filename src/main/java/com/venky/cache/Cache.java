@@ -7,9 +7,10 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.venky.core.checkpoint.Mergeable;
 import com.venky.core.util.ObjectUtil;
 
-public abstract class Cache<K,V> implements Cloneable {
+public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> {
 	
 	public static final int MAX_ENTRIES_DEFAULT = 1000;
 	public static final int MAX_ENTRIES_UNLIMITED = 0;
@@ -76,6 +77,11 @@ public abstract class Cache<K,V> implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public void merge(Cache<K,V> another){
+		ObjectUtil.mergeValues(another.accessTimeMap,this.accessTimeMap);
+		ObjectUtil.mergeValues(another.cacheMap,this.cacheMap);
 	}
 	public int size(){
 		return cacheMap.size();
