@@ -9,7 +9,6 @@ public class Checkpointed<M> implements Checkpointable<M>{
 
 	private M initial ;
 	public Checkpointed(M m){
-		
 		initial = m;
 	}
 
