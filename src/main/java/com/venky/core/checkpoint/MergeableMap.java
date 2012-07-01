@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.venky.core.util.ObjectUtil;
 
-public class MergeableMap <K ,V> implements Serializable, Map<K,V> , Mergeable<Map<K, V>> , Cloneable{
+public class MergeableMap <K ,V> implements Serializable, Map<K,V> , Mergeable<Map<K, V>> {
 	
 
 	private static final long serialVersionUID = -7236530815567656228L;

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.venky.core.util.ObjectUtil;
 
-public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<Set<E>> , Serializable, Cloneable{
+public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<Set<E>> , Serializable{
 
 	private Set<E> set;
 	public int size() {
