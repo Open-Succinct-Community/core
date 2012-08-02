@@ -23,14 +23,18 @@ public class BeanReader<B> extends BeanIntrospector<B>{
     
     private Sheet sheet;
     private Iterator<Row> rowIterator; 
-    private String[] heading; 
-    public BeanReader(Workbook book, String sheetName, Class<B> beanClass) throws InstantiationException, IllegalAccessException{
+    private String[] heading;
+    protected String[] getHeading(){
+    	return heading;
+    }
+    
+    public BeanReader(Workbook book, String sheetName, Class<B> beanClass){
         this(book.getSheet(sheetName),beanClass);
     }
-    public BeanReader(Workbook book, int sheetIndex,Class<B> beanClass) throws InstantiationException, IllegalAccessException{
+    public BeanReader(Workbook book, int sheetIndex,Class<B> beanClass){
         this(book.getSheetAt(sheetIndex),beanClass);
     }
-    public BeanReader(Sheet beanSheet,Class<B> beanClass) throws InstantiationException, IllegalAccessException{
+    public BeanReader(Sheet beanSheet,Class<B> beanClass){
         super(beanClass);
         this.sheet = beanSheet;
         this.rowIterator = sheet.iterator();
@@ -76,7 +80,7 @@ public class BeanReader<B> extends BeanIntrospector<B>{
         return (rowIterator.hasNext() ? rowIterator.next() : null); 
     }
     
-    private void fillBeanValues(B b, Row row){
+    protected void fillBeanValues(B b, Row row){
         for (int i = 0 ; i < heading.length ; i ++ ){ 
             Method getter = getGetter(heading[i]);
             if (getter == null) {

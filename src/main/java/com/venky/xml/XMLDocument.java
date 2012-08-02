@@ -69,13 +69,17 @@ public class XMLDocument {
 
     public static XMLDocument getDocumentFor(InputStream is) {
         Reader r = new InputStreamReader(is);
-        return new XMLDocument(XMLSerializationHelper.getDocument(r));
+        return getDocumentFor(r);
     }
     
     public static XMLDocument getDocumentFor(String s){
         StringReader r = new StringReader(s);
-        return new XMLDocument(XMLSerializationHelper.getDocument(r));
+        return getDocumentFor(r);
     }
+    public static XMLDocument getDocumentFor(Reader r){
+    	return new XMLDocument(XMLSerializationHelper.getDocument(r));
+    }
+    
 
     @Override
     public String toString() {

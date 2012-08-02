@@ -12,8 +12,11 @@ import java.util.Date;
  * @author venky
  */
 public class BeanIntrospector<B> {
-    private Class<B> beanClass; 
-    protected BeanIntrospector(Class<B> beanClass) throws InstantiationException, IllegalAccessException{
+    private Class<B> beanClass;
+    protected Class<B> getBeanClass(){
+    	return beanClass;
+    }
+    protected BeanIntrospector(Class<B> beanClass) {
         this.beanClass = beanClass;
     }
     Class<?>[] primitiveNumericClasses = new Class[] { int.class, short.class, long.class, double.class, float.class }; 
