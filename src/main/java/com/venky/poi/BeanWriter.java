@@ -23,7 +23,7 @@ public class BeanWriter<B> extends BeanIntrospector<B> {
     private Sheet sheet;
     private int numBeansWriten = 0;
     private String[] headings ;
-    public BeanWriter(Class<B> beanClass, Sheet sheet, CellStyle headerStyle, String... headings) throws InstantiationException, IllegalAccessException{
+    public BeanWriter(Class<B> beanClass, Sheet sheet, CellStyle headerStyle, String... headings){
         super(beanClass);
         this.sheet = sheet; 
         this.headings = (headings == null || headings.length == 0)? extractHeadings(beanClass) : headings;

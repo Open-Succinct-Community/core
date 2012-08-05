@@ -28,7 +28,7 @@ public class Dijkstra extends Network{
         final Map<Integer,Integer> previousHash = new HashMap<Integer, Integer>();
         
         List<Integer> path = new ArrayList<Integer>();
-        Node source = getNode(from);
+        //Node source = getNode(from);
         for (int nodeId :getNodes()){
             distanceHash.put(nodeId, Integer.MAX_VALUE);
             previousHash.put(nodeId, null);
