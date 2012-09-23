@@ -32,6 +32,7 @@ public class IgnoreCaseMap<V> extends TreeMap<String, V> implements Cloneable, M
 		return super.remove(ucase(key));
 	}
 
+	@SuppressWarnings("unchecked")
 	public IgnoreCaseMap<V> clone(){
 		IgnoreCaseMap<V> clone = (IgnoreCaseMap<V>) super.clone();
 		ObjectUtil.cloneValues(clone);

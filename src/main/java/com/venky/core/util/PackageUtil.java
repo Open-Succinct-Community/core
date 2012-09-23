@@ -36,6 +36,7 @@ public class PackageUtil {
                         addClassName(classes, je.getName());
                     }
                 }
+                jf.close();
             }else if (url.getProtocol().equals("file")) {
                 File root = new File(url.getPath());
                 Stack<File> sFiles = new Stack<File>();

@@ -5,6 +5,7 @@
 package com.venky.core.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -26,11 +28,7 @@ import com.venky.core.io.ByteArrayInputStream;
  */
 public class ObjectUtil {
     public static boolean equals(Object o1, Object o2){
-        if (o1 == null){
-            return o2 == null; 
-        }else {
-            return o1.equals(o2);
-        }
+        return Objects.equals(o1, o2);
     }
     
     public static boolean isVoid(Object o){
@@ -66,18 +64,26 @@ public class ObjectUtil {
      * @param v Object to clone. 
      * @return A deep clone of v on successful serializing and deserializing of v. On encounting any Serialization exception, v is return unmodified.    
      */
-    public static <V extends Serializable> V deepClone(V v){
+    @SuppressWarnings("unchecked")
+	public static <V extends Serializable> V deepClone(V v){
     	if (v == null){
     		return null;
     	}
+    	ObjectInputStream is =null; 
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(baos);
 			os.writeObject(v);
-			ObjectInputStream is = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+			is = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
 			return (V)is.readObject();
 		} catch (Exception e) {
-			//
+			if (is != null){
+				try {
+					is.close();
+				} catch (IOException e1) {
+					throw new RuntimeException(e1);
+				}
+			}
 		}
 		return v;
     }
@@ -89,7 +95,8 @@ public class ObjectUtil {
      * @return A reflective clone created by invoking v.clone() method if it exists.    
      */
 
-    public static <V extends Cloneable> V reflectiveClone(V v){
+    @SuppressWarnings("unchecked")
+	public static <V extends Cloneable> V reflectiveClone(V v){
     	if (v == null){
     		return null;
     	}
@@ -100,7 +107,8 @@ public class ObjectUtil {
 			return v;
 		} 
     }
-    public static <V> V clone(V v){
+    @SuppressWarnings("unchecked")
+	public static <V> V clone(V v){
     	V ret = v;
     	if (v != null) {
     		if (v instanceof Serializable){
@@ -117,7 +125,8 @@ public class ObjectUtil {
     		inMap.put(k, ObjectUtil.clone(inMap.get(k)));
     	}
     }
-    public static <K,V> void mergeValues(Map<K,V> src, Map<K,V> target){
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <K,V> void mergeValues(Map<K,V> src, Map<K,V> target){
 		if (src == null){
 			throw new NullPointerException("Null parameter passed");
 		}
@@ -156,7 +165,8 @@ public class ObjectUtil {
     	set.addAll(list);
     }
     
-    public static <E> void mergeValues(Set<E> src, Set<E> target){
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <E> void mergeValues(Set<E> src, Set<E> target){
 		if (target == null || src == null ){
 			throw new NullPointerException("Null parameter passed");
 		}

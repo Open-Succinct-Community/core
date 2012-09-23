@@ -138,7 +138,7 @@ public class BeanReaderTest {
     @Test
     public void testGetAllUnreadRecords() {
         System.out.println("getAllUnreadRecords");
-        List result = instance.getAllUnreadRecords();
+        List<Item> result = instance.getAllUnreadRecords();
         assertEquals(result.size(),4);
     }
 
@@ -148,7 +148,7 @@ public class BeanReaderTest {
     @Test
     public void testGetNextRecords() {
         System.out.println("getNextRecords");
-        List result = instance.getNextRecords(2);
+        List<Item> result = instance.getNextRecords(2);
         assertEquals(2, result.size());
         result = instance.getNextRecords(2);
         assertEquals(2, result.size());

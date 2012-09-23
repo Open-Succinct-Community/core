@@ -371,7 +371,7 @@ public class TextRecognizer {
 		if (currentRegion.width() < 2){
 			return; // Avoid specs.
 		}
-		Set<Character> trials = new TreeSet();
+		Set<Character> trials = new TreeSet<Character>();
 		SortedMap<Integer,List<Character>> trainingCharactersByHeightMap = histogram.getTrainingCharactersByHeight();
 		double[] scale = new double []{ (1.0 * band.maxHeight)/ currentRegion.line.tallest.height() ,
 										(1.0 * band.maxWidth)/ currentRegion.line.widest.width() ,

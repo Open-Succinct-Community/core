@@ -83,6 +83,7 @@ public class MergeableSet<E extends Serializable> implements Set<E>, Mergeable<S
 		ObjectUtil.mergeValues(another, this);
 	}
 
+	@SuppressWarnings("unchecked")
 	public MergeableSet<E> clone(){
 		try {
 			MergeableSet<E> clone = (MergeableSet<E>) super.clone();

@@ -26,7 +26,7 @@ public class BeanIntrospector<B> {
             return true;
         }
         if (headingClass.isPrimitive()){
-            for (Class pc : primitiveNumericClasses){
+            for (Class<?> pc : primitiveNumericClasses){
                 if (pc.equals(headingClass)){
                     return true;
                 }

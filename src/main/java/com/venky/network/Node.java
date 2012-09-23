@@ -21,7 +21,8 @@ public class Node {
     public final <V> void setAttribute(String name, V value){
         attributes.put(name, value);
     }
-    public final <V> V getAttribute(String name){
+    @SuppressWarnings("unchecked")
+	public final <V> V getAttribute(String name){
         return (V)attributes.get(name);
     }
     

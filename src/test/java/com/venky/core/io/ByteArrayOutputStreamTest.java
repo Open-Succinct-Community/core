@@ -20,7 +20,16 @@ public class ByteArrayOutputStreamTest {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
+		}finally {
+			if (os != null){
+				try {
+					os.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
+		
 		
 	}
 

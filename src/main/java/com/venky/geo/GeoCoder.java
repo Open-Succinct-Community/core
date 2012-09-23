@@ -20,26 +20,18 @@ import com.venky.xml.XMLElement;
  */
 public class GeoCoder {
     private static final GeoSP[] sps = { new Nominatim() , new Google()};
-    
-    public static class Location {
-        float lat,lng; 
-        public Location(float lat, float lng){
-            this.lat = lat; 
-            this.lng = lng;
-        }
-        public float lat(){
-        	return lat;
-        }
-        public float lng(){
-        	return lng;
-        }
-        public String toString(){
-        	return "(lat,lng):(" + lat + "," + lng + ")";
-        }
+    public static void fillGeoInfo(String address,GeoLocation location){
+    	GeoLocation result = getLocation(address);
+    	if (result != null){
+	    	location.setLatitude(result.getLatitude());
+	    	location.setLongitude(result.getLongitude());
+    	}
     }
-    public static Location getLocation(String address){
+    
+    private static final GeoLocationBuilder<GeoLocation> builder = new DefaultGeoLocationBuilder();
+    public static GeoLocation getLocation(String address){
     	for (GeoSP sp : sps){
-           Location loc = sp.getLocation(address);
+           GeoLocation loc = sp.getLocation(address);
            if (loc != null){
         	   Logger.getLogger(GeoCoder.class.getName()).info("Lat,Lon found using " + sp.getClass().getSimpleName());
         	   return loc;
@@ -48,11 +40,11 @@ public class GeoCoder {
     	return null;
     }
     private static interface GeoSP {
-    	public Location getLocation(String address);
+    	public GeoLocation getLocation(String address);
     }
     private static class Google implements GeoSP {
     	private static final String WSURL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=";
-		public Location getLocation(String address) {
+		public GeoLocation getLocation(String address) {
         	try {
 	            String url = WSURL + URLEncoder.encode(address,"UTF-8");
 	            URL u = new URL(url);
@@ -72,7 +64,7 @@ public class GeoCoder {
 	                    }
 	                }
 	            	Logger.getLogger(getClass().getName()).info("URL:" + url);
-	                return new Location(lat,lng);
+	                return builder.create(lat,lng);
 	            }
 	        } catch (IOException e) {
 	           Logger.getLogger(getClass().getName()).warning(e.getMessage());
@@ -83,7 +75,7 @@ public class GeoCoder {
     }
     private static class Nominatim implements GeoSP {
     	private static final String WSURL = "http://nominatim.openstreetmap.org/search?format=xml&polygon=0&q=";
-		public Location getLocation(String address) {
+		public GeoLocation getLocation(String address) {
 			try {
 	            String url = WSURL + URLEncoder.encode(address,"UTF-8");
 	            URL u = new URL(url);
@@ -95,7 +87,7 @@ public class GeoCoder {
 	            	Logger.getLogger(getClass().getName()).info("URL:" + url);
 	                float lat= Float.valueOf(place.getAttribute("lat")); 
 	                float lng= Float.valueOf(place.getAttribute("lon")) ;
-	                return new Location(lat,lng);
+	                return builder.create(lat,lng);
 	            }
 	        } catch (IOException e) {
 	           Logger.getLogger(getClass().getName()).warning(e.getMessage());

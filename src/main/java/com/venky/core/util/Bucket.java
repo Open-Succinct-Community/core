@@ -12,7 +12,7 @@ import com.venky.core.checkpoint.Mergeable;
  *
  * @author venky
  */
-public class Bucket implements Cloneable, Serializable, Mergeable<Bucket>{
+public class Bucket extends Number implements Cloneable, Serializable, Mergeable<Bucket> {
 	/**
 	 * 
 	 */
@@ -64,6 +64,18 @@ public class Bucket implements Cloneable, Serializable, Mergeable<Bucket>{
     
 	public void merge(Bucket another) {
 		this.counter = another.counter;
+	}
+	@Override
+	public long longValue() {
+		return (long)this.counter;
+	}
+	@Override
+	public float floatValue() {
+		return (float)this.counter;
+	}
+	@Override
+	public double doubleValue() {
+		return counter;
 	}
 	
            

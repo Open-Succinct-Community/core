@@ -23,6 +23,7 @@ public class MergeableMap <K ,V> implements Serializable, Map<K,V> , Mergeable<M
 	@Override
 	public MergeableMap<K, V> clone(){
 		try {
+			@SuppressWarnings("unchecked")
 			MergeableMap<K, V> clone = (MergeableMap<K, V>) super.clone();
 			clone.proxyMap = ObjectUtil.clone(proxyMap);
 			if (clone.proxyMap != proxyMap){

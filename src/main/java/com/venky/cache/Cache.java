@@ -65,6 +65,7 @@ public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> {
  		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Cache<K,V> clone(){
 		try {
 			Cache<K,V> clone = (Cache<K,V>)super.clone();

@@ -32,7 +32,7 @@ public class TimerStatistics {
 		return timerStatistics;
 	}
 	
-	private static ThreadLocal<Stack> timerStackInThread = new ThreadLocal<Stack>();
+	private static ThreadLocal<Stack<Timer>> timerStackInThread = new ThreadLocal<Stack<Timer>>();
 	static Stack<Timer> getTimerStack(){
 		Stack<Timer> timerStack = timerStackInThread.get();
 		if (timerStack == null){

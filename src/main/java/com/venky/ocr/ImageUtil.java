@@ -2,6 +2,7 @@ package com.venky.ocr;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.RenderingHints.Key;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
@@ -43,7 +44,7 @@ public class ImageUtil {
 	}
 	
 	private static RenderingHints defaultRenderingHints(){
-		Map map = new HashMap();
+		Map<Key,Object> map = new HashMap<Key,Object>();
 		
 		map.put(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		map.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

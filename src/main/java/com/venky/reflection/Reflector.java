@@ -42,7 +42,8 @@ public class Reflector<U, C extends U> {
 			classHierarchy.add(rClass);
 			classForest.add(rClass);
 
-    		Class<? extends U> parentClass = (Class<? extends U>)getParentClass(rClass,upperBoundClass);
+    		@SuppressWarnings("unchecked")
+			Class<? extends U> parentClass = (Class<? extends U>)getParentClass(rClass,upperBoundClass);
 
     		for (Class<?> i : rClass.getInterfaces()){
     			if (i == parentClass){
@@ -157,7 +158,7 @@ public class Reflector<U, C extends U> {
     public Class<?> getParentClass(){
     	return getParentClass(reflectedClass);
     }
-    public Class<?> getParentClass(Class clazz){
+    public Class<?> getParentClass(Class<?> clazz){
     	int i = classHierarchy.indexOf(clazz);
     	if (i  >= 0 && i < classHierarchy.size() - 1){
     		return classHierarchy.get(i+1); 
@@ -248,7 +249,7 @@ public class Reflector<U, C extends U> {
     	}
     }
     
-    public static Class<?> getParentClass(Class clazz,Class<?> aSuperInfcOrClass){
+    public static Class<?> getParentClass(Class<?> clazz,Class<?> aSuperInfcOrClass){
     	
     	Class<?> c = clazz;
     	if (aSuperInfcOrClass != null && !aSuperInfcOrClass.isAssignableFrom(c)){

@@ -42,7 +42,7 @@ public class GenericsTest {
     @Test
     public void testGenericType(){ 
         List<String> s = new ArrayList<String>();
-        TypeVariable tv = s.getClass().getTypeParameters()[0];
+        TypeVariable<?> tv = s.getClass().getTypeParameters()[0];
         System.out.println(tv.getName());
     }
 }

@@ -4,7 +4,6 @@
  */
 package com.venky.geo;
 
-import com.venky.geo.GeoCoder.Location;
 
 
 
@@ -13,12 +12,12 @@ import com.venky.geo.GeoCoder.Location;
  * @author venky
  */
 public class City {
-    private Location location; 
+    private GeoLocation location; 
     public City(String name){
         this.location = GeoCoder.getLocation(name);
     }
 
-    public Location getLocation() {
+    public GeoLocation getLocation() {
         return location;
     }
     

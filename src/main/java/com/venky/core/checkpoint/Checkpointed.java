@@ -31,7 +31,7 @@ public class Checkpointed<M> implements Checkpointable<M>{
 		if (checkpoints.isEmpty()){
 			this.initial = value;
 		}else {
-			Checkpoint cp = this.checkpoints.peek();
+			Checkpoint<M> cp = this.checkpoints.peek();
 			cp.setValue(value);
 		}
 	}
@@ -49,7 +49,7 @@ public class Checkpointed<M> implements Checkpointable<M>{
 			checkpoints.clear();
 		}else {
 			while (!checkpoints.isEmpty()){
-				Checkpoint last = checkpoints.pop();
+				Checkpoint<M> last = checkpoints.pop();
 				if (last == cp){
 					return;
 				}
@@ -67,6 +67,7 @@ public class Checkpointed<M> implements Checkpointable<M>{
 		commit(null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void commit(Checkpoint<M> cp){
 		M finalValue = getCurrentValue();
 		rollback(cp);

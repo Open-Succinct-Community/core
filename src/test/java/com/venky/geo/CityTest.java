@@ -13,7 +13,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
 
-import com.venky.geo.GeoCoder.Location;
 
 /**
  *
@@ -48,9 +47,9 @@ public class CityTest {
         System.out.println("getLocation");
         try {
         	City instance = new City("Bangalore");
-            Location result = instance.getLocation();
-            assertEquals(12.9716,result.lat,0.02);
-            assertEquals(77.5946,result.lng,0.02);
+            GeoLocation result = instance.getLocation();
+            assertEquals(12.9716,result.getLatitude(),0.02);
+            assertEquals(77.5946,result.getLongitude(),0.02);
         }catch (Exception ex){
         	if (ex.getCause() instanceof SAXParseException){
             	if (ex.getCause().getMessage().startsWith("Premature end of file")){

@@ -115,6 +115,7 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	@Override
 	public Object clone(){
 		try {
+			@SuppressWarnings("unchecked")
 			SequenceSet<E> set = (SequenceSet<E>)super.clone();
 			set.list = new ArrayList<E>();
 			for (E e :this){
