@@ -1,7 +1,7 @@
 package com.venky.clustering;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.venky.core.string.StringUtil;
@@ -36,7 +36,7 @@ public class Cluster<T> {
 	}
 	
 	
-	private Collection<T> points = new ArrayList<T>();
+	private List<T> points = new ArrayList<T>();
 	public void addPoint(T t){
 		points.add(t);
 		if (centroid != null){
@@ -66,7 +66,7 @@ public class Cluster<T> {
 		}
 		return distance;
 	}
-	public Collection<T> getPoints(){
+	public List<T> getPoints(){
 		return points;
 	}
 	public Distance distance(Cluster<T> cluster){

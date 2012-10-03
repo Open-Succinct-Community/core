@@ -3,20 +3,21 @@ package com.venky.core.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.venky.core.util.ObjectUtil;
 
 public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	private ArrayList<E> list ;
-	private HashSet<E> set ;
+	private HashMap<E,Integer> set ;
 	
 	public SequenceSet(){
-		set = new HashSet<E>();
+		set = new HashMap<E,Integer>();
 		list = new ArrayList<E>();
 	}
 
@@ -45,7 +46,7 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	}
 
 	public boolean contains(Object o) {
-		return set.contains(o);
+		return set.containsKey(o);
 	}
 
 	public Iterator<E> iterator() {
@@ -79,15 +80,25 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	}
 
 	public boolean add(E e) {
-		return set.add(e) && list.add(e);
+		if (!set.containsKey(e)){
+			list.add(e);
+			set.put(e, list.size()-1);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean remove(Object o) {
-		return set.remove(o) && list.remove(o);
+		Integer indexInList = set.remove(o);
+		if (indexInList != null){
+			list.remove(indexInList);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean containsAll(Collection<?> c) {
-		return set.containsAll(c);
+		return set.keySet().containsAll(c);
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
@@ -100,11 +111,26 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	}
 
 	public boolean retainAll(Collection<?> c) {
-		return set.retainAll(c) && list.retainAll(c);
+		Iterator<E> i = iterator();
+		boolean ret = false; 
+		while (i.hasNext()){
+			E e = i.next();
+			if (!c.contains(e)){
+				i.remove();
+				ret = true;
+			}
+		}
+		return ret;
 	}
 
 	public boolean removeAll(Collection<?> c) {
-		return set.removeAll(c) && list.removeAll(c);
+		Iterator<?> i = c.iterator();
+		boolean modified = false;
+		while (i.hasNext()){
+			Object o = i.next();
+			modified = remove(o) || modified;
+		}
+		return modified;
 	}
 
 	public void clear() {
@@ -118,12 +144,12 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 			@SuppressWarnings("unchecked")
 			SequenceSet<E> set = (SequenceSet<E>)super.clone();
 			set.list = new ArrayList<E>();
-			for (E e :this){
-				E clone = ObjectUtil.clone(e);
+			set.set =  new HashMap<E,Integer>();
+			for (int i = 0 ; i < size() ; i ++ ){
+				E clone = ObjectUtil.clone(get(i));
 				set.list.add(clone);
+				set.set.put(clone, i);
 			}
-			set.set =  new HashSet<E>();
-			set.set.addAll(set.list);
 			return set;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
@@ -155,42 +181,109 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	}
 
 	public E set(int index, E element) {
-		E old = remove(index);
-		add(index,element);
-		return old;
+		E elementKnockedOut = get(index);
+		if (contains(element)){
+			int oldIndex = set.get(element);
+			list.set(oldIndex,elementKnockedOut);
+			set.put(elementKnockedOut, oldIndex);
+		}else {
+			set.remove(elementKnockedOut);
+		}
+		list.set(index, element);
+		set.put(element, index);
+		return elementKnockedOut;
 	}
 
 	public void add(int index, E element) {
-		if (contains(element)){
-			int idx = list.indexOf(element);
-			list.remove(idx);
-			list.add(index,element);
-		}else {
-			set.add(element);
-			list.add(index,element);
+		Integer idx = set.get(element);
+		if (idx != null){
+			remove(idx);
 		}
-		
+		list.add(index,element);
+		for (int i = index; i < list.size() ; i ++){
+			set.put(list.get(i),i);
+		}
 	}
 
 	public E remove(int index) {
-		E o = get(index);
-		remove(o);
+		E o = list.remove(index);
+		set.remove(o);
 		return o;
 	}
 
 	public int lastIndexOf(Object o) {
 		return indexOf(o);
 	}
+	
+	private class Itr implements ListIterator<E> {
+		int cursor;
+		public Itr(int index){
+			this.cursor = index;
+		}
+		@Override
+		public boolean hasNext() {
+			return cursor < list.size();
+		}
 
+		@Override
+		public E next() {
+			E v = get(cursor);
+			cursor ++; 
+			return v;
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			return cursor > 0;
+		}
+		@Override
+		public E previous() {
+			int i = cursor - 1 ;
+			try {
+				E v = get(i);
+				cursor = i  ;
+				return v;
+			}catch (IndexOutOfBoundsException ex){
+				throw new NoSuchElementException();
+			}
+		}
+
+		@Override
+		public int nextIndex() {
+			return cursor;
+		}
+
+		@Override
+		public int previousIndex() {
+			return cursor - 1;
+		}
+
+		@Override
+		public void remove() {
+			SequenceSet.this.remove(cursor-1);
+		}
+
+		@Override
+		public void set(E e) {
+			SequenceSet.this.set(cursor-1,e);
+		}
+
+		@Override
+		public void add(E e) {
+			SequenceSet.this.add(cursor,e);
+			cursor ++ ;
+		}
+		
+	}
 	public ListIterator<E> listIterator() {
-		return Collections.unmodifiableList(list).listIterator();
+		return listIterator(0);
 	}
 
 	public ListIterator<E> listIterator(int index) {
-		return Collections.unmodifiableList(list).listIterator(index);
+		return new Itr(0);
 	}
 
 	public List<E> subList(int fromIndex, int toIndex) {
-		return Collections.unmodifiableList(list).subList(fromIndex, toIndex);
+		return list().subList(fromIndex, toIndex);
 	}
 }

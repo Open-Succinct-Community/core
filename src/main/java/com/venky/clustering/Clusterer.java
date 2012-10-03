@@ -1,6 +1,7 @@
 package com.venky.clustering;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,37 @@ public class Clusterer<T> {
 		return metric;
 	}
 	
-	public List<Cluster<T>> clusters(List<T> points,int maxClusters){
+	public List<Cluster<T>> cluster(Collection<T> points, List<T> centroids){
+		List<Cluster<T>> clusters = new ArrayList<Cluster<T>>();
+		for (T centroid: centroids){
+			Cluster<T> init = new Cluster<T>(this);
+			init.addPoint(centroid);
+			clusters.add(init);
+		}
+		
+		for (T p : points){
+			int closestCentroidIndex = -1;
+			double distanceToClosestCentroid = Double.POSITIVE_INFINITY;
+			
+			for (int i = 0; i < centroids.size() ; i ++ ){
+				double distanceToCentroid = metric.distance(centroids.get(i),p);
+				if (distanceToClosestCentroid > distanceToCentroid){
+					distanceToClosestCentroid = distanceToCentroid; 
+					closestCentroidIndex = i ;
+				}
+			}
+			if (closestCentroidIndex >= 0 ){
+				clusters.get(closestCentroidIndex).addPoint(p);
+			}
+		}
+		return clusters;
+	}
+	
+	public List<Cluster<T>> cluster(Collection<T> points, int maxClusters){
+		return cluster(points,new MaxClustersCreated(maxClusters)); 
+	}
+	
+	public List<Cluster<T>> cluster(Collection<T> points,StopCriteria stopCritieria){
 		List<Cluster<T>> clusters = new ArrayList<Cluster<T>>();
 		for (T point: points){
 			Cluster<T> init = new Cluster<T>(this);
@@ -31,7 +62,7 @@ public class Clusterer<T> {
 		}
 		
 		Map<Cluster<T>,Map<Cluster<T>,Double>> distances = new HashMap<Cluster<T>, Map<Cluster<T>,Double>>();
-		while (clusters.size() > maxClusters){
+		while (!stopCritieria.canStop(clusters)){
 
 			int indexGrown = 0; 
 			int indexDestroyed = 0; 

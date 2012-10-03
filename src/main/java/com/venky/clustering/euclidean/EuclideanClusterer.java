@@ -7,5 +7,5 @@ public class EuclideanClusterer extends Clusterer<EuclideanPoint>{
 	public EuclideanClusterer() {
 		super(new EuclideanCenterFinder(),new EuclideanMetric());
 	}
-
+ 
 }

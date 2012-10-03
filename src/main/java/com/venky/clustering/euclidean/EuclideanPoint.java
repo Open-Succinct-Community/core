@@ -11,7 +11,16 @@ public class EuclideanPoint {
 			this.coordinates[i] = coordinates[i].doubleValue();
 		}
 	}
-	
+	public double[] getCoordinates(){ 
+		return coordinates;
+	}
+	public double getCoordinate(int index){ 
+		if (index >= coordinates.length || index < 0 ) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
+		return coordinates[index];
+	}
+
 	@Override
 	public String toString(){
 		StringBuilder b = new StringBuilder(); 

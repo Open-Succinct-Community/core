@@ -42,7 +42,7 @@ public class ClusterEuclidean {
 		pointsOver100.add(new EuclideanPoint(107.0));
 		points.addAll(pointsOver100);
 		
-		List<Cluster<EuclideanPoint>> clusters = oneDimClusterer.clusters(points, 4);
+		List<Cluster<EuclideanPoint>> clusters = oneDimClusterer.cluster(points, 4);
 		Assert.assertTrue("Cluster 0 expected to contain p123" , clusters.get(0).getPoints().containsAll(p123));
 		Assert.assertTrue("Cluster 1 expected to contain p10111213" ,  clusters.get(1).getPoints().containsAll(p10111213));
 		Assert.assertTrue("Cluster 2 expected to contain p232425" , clusters.get(2).getPoints().containsAll(p232425));
@@ -53,7 +53,7 @@ public class ClusterEuclidean {
 		pointsLessThan100.addAll(p10111213);
 		pointsLessThan100.addAll(p232425);
 		
-		clusters = oneDimClusterer.clusters(points, 2);
+		clusters = oneDimClusterer.cluster(points, 2);
 		Assert.assertTrue("Cluster 0 expected to contain pointsLessThan100" , clusters.get(0).getPoints().containsAll(pointsLessThan100));
 		Assert.assertTrue("Cluster 1 expected to contain pointsOver100" , clusters.get(1).getPoints().containsAll(pointsOver100));
 		

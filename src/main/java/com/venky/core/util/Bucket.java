@@ -12,7 +12,7 @@ import com.venky.core.checkpoint.Mergeable;
  *
  * @author venky
  */
-public class Bucket extends Number implements Cloneable, Serializable, Mergeable<Bucket> {
+public class Bucket extends Number implements Cloneable, Serializable, Mergeable<Bucket>, Comparable<Bucket> {
 	/**
 	 * 
 	 */
@@ -77,6 +77,15 @@ public class Bucket extends Number implements Cloneable, Serializable, Mergeable
 	public double doubleValue() {
 		return counter;
 	}
-	
-           
+	@Override
+	public int compareTo(Bucket o) {
+		return Double.compare(value(), o.value());
+	}
+
+	@Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Bucket)
+               && (compareTo((Bucket)obj) == 0);
+    }
+       
 }

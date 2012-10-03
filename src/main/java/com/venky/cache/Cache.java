@@ -1,6 +1,7 @@
 package com.venky.cache;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -128,5 +129,9 @@ public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> {
 	protected abstract V getValue(K k);
 	public Long accessTime(K k){
 		return accessTimeMap.get(k);
+	}
+	
+	public Collection<V> values(){
+		return cacheMap.values();
 	}
 }
