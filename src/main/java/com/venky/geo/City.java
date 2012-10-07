@@ -14,7 +14,7 @@ package com.venky.geo;
 public class City {
     private GeoLocation location; 
     public City(String name){
-        this.location = GeoCoder.getLocation(name);
+        this.location = new GeoCoder().getLocation(name);
     }
 
     public GeoLocation getLocation() {
