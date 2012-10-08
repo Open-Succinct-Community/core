@@ -29,7 +29,7 @@ public class Cluster<T> {
 	
 	private T centroid = null; 
 	public T centroid(){
-		if (centroid == null ){
+		if (centroid == null && clusterer.getCenterFinder() != null){
 			centroid = clusterer.getCenterFinder().center(points);
 		}
 		return centroid;
@@ -44,10 +44,18 @@ public class Cluster<T> {
 		}
 	}
 	public double centroidDistance(T point){
-		return clusterer.getMetric().distance(centroid(), point);
+		T centroid = centroid();
+		if (centroid != null) { 
+			return clusterer.getMetric().distance(centroid, point);
+		}
+		return Double.POSITIVE_INFINITY;
 	}
 	public double centroidDistance(Cluster<T> cluster){
-		return clusterer.getMetric().distance(centroid(), cluster.centroid());
+		T centroid = centroid();
+		if (centroid != null) { 
+			return clusterer.getMetric().distance(centroid, cluster.centroid());
+		}
+		return Double.POSITIVE_INFINITY;
 	}
 	public Distance distance(T point){
 		Distance distance = new Distance();

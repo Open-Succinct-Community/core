@@ -86,7 +86,7 @@ public class GeoCoder {
 	            	Logger.getLogger(getClass().getName()).info("URL:" + url);
 	            	XMLElement result = doc.getDocumentRoot().getChildElement("Result");
 		            String radius = result.getChildElement("radius").getNodeValue(); 
-			        if (Double.valueOf(radius) < 10000){    	
+			        if (Double.valueOf(radius) < 5000){    	
 		            	String latitude = result.getChildElement("latitude").getNodeValue();
 		            	String longitude = result.getChildElement("longitude").getNodeValue();
 		            	return builder.create(Float.valueOf(latitude), Float.valueOf(longitude));

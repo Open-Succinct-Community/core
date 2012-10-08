@@ -1,5 +1,6 @@
 package com.venky.cache;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,8 +12,12 @@ import java.util.TreeMap;
 import com.venky.core.checkpoint.Mergeable;
 import com.venky.core.util.ObjectUtil;
 
-public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> {
+public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> , Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4801418262910565684L;
 	public static final int MAX_ENTRIES_DEFAULT = 1000;
 	public static final int MAX_ENTRIES_UNLIMITED = 0;
 	public static final double PRUNE_FACTOR_DEFAULT = 0.8;

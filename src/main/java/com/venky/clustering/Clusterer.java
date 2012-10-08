@@ -78,7 +78,11 @@ public class Clusterer<T> {
 					Cluster<T> other = clusters.get(j);
 					Double distance = inspectedDistances.get(other); 
 					if (distance == null){
-						distance = inspected.centroidDistance(other);
+						if (centerFinder != null){
+							distance = inspected.centroidDistance(other);
+						}else {
+							distance = inspected.distance(other).getMaxDistance();
+						}
 						inspectedDistances.put(other, distance);
 					}
 					

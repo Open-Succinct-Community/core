@@ -14,13 +14,22 @@ public class GeoCentroidFinder<L extends GeoLocation> implements CenterFinder<L>
 	}
 	@Override
 	public L center(Collection<L> points) {
-		Bucket lat = new Bucket();
-		Bucket lng = new Bucket();
+		Bucket x = new Bucket();
+		Bucket y = new Bucket();
+		Bucket z = new Bucket();
 		for (L loc: points){
-			lat.increment(loc.getLatitude());
-			lng.increment(loc.getLongitude());
+			double cosLat = Math.cos(loc.getLatitude()*Math.PI / 180.0);
+			double sinLat = Math.sin(loc.getLatitude()*Math.PI / 180.0);
+			double cosLng = Math.cos(loc.getLongitude()*Math.PI / 180.0);
+			double sinLng = Math.sin(loc.getLongitude()*Math.PI / 180.0);
+			
+			x.increment(cosLat * cosLng);
+			y.increment(cosLat * sinLng);
+			z.increment(sinLat);
 		}
-		return builder.create(lat.floatValue()/points.size(), lng.floatValue() / points.size());
+		float lat = (float)(Math.asin(z.value()/points.size())*180.0/Math.PI);
+		float lng = (float)(Math.atan(y.value() / x.value()) * 180.0/Math.PI);
+		return builder.create(lat,lng);
 	}
 
 	@Override
