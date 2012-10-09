@@ -50,25 +50,7 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	}
 
 	public Iterator<E> iterator() {
-		return new Iterator<E>(){
-			Iterator<E> li = list.iterator();
-			E current = null;
-
-			public boolean hasNext() {
-				return li.hasNext();
-			}
-
-			public E next() {
-				current = li.next();
-				return current;
-			}
-
-			public void remove() {
-				li.remove();
-				set.remove(current);
-			}
-			
-		};
+		return listIterator(0);
 	}
 
 	public Object[] toArray() {
@@ -91,7 +73,8 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	public boolean remove(Object o) {
 		Integer indexInList = set.remove(o);
 		if (indexInList != null){
-			list.remove(indexInList);
+			list.remove(indexInList.intValue());
+			resetIndexes(indexInList);
 			return true;
 		}
 		return false;
@@ -175,15 +158,16 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 		Iterator<? extends E> i = c.iterator();
 		boolean ret = false;
 		while (i.hasNext()){
-			ret = add(i.next()) || ret;
+			ret = true; 
+			add(index++ ,i.next());
 		}
 		return ret;
 	}
 
 	public E set(int index, E element) {
 		E elementKnockedOut = get(index);
-		if (contains(element)){
-			int oldIndex = set.get(element);
+		Integer oldIndex = set.get(element);
+		if (oldIndex != null){
 			list.set(oldIndex,elementKnockedOut);
 			set.put(elementKnockedOut, oldIndex);
 		}else {
@@ -197,17 +181,32 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 	public void add(int index, E element) {
 		Integer idx = set.get(element);
 		if (idx != null){
-			remove(idx);
+			if (idx.intValue() == index){
+				return;
+			}
+			list.remove(idx.intValue());
 		}
 		list.add(index,element);
-		for (int i = index; i < list.size() ; i ++){
+		if (idx == null){
+			resetIndexes(index) ;
+		}else if (idx < index){
+			resetIndexes(idx,index);
+		}else {
+			resetIndexes(index,idx);
+		}
+	}
+	private void resetIndexes(int from,int to){
+		for (int i = from; i <= to ; i ++){
 			set.put(list.get(i),i);
 		}
 	}
-
+	private void resetIndexes(int from){
+		resetIndexes(from,list.size()-1);
+	}
 	public E remove(int index) {
 		E o = list.remove(index);
 		set.remove(o);
+		resetIndexes(index);
 		return o;
 	}
 
