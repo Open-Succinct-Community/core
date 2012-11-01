@@ -76,6 +76,9 @@ public class BeanWriter<B> extends BeanIntrospector<B> {
         for (int i = 0 ; i < headings.length ; i++ ){
             String heading = headings[i];
             Method getter = getGetter(heading);
+            if (getter == null){
+            	continue;
+            }
             Object value  = null;
             try {
                 value = getter.invoke(bean, new Object[]{});

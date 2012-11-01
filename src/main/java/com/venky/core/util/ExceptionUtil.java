@@ -10,11 +10,18 @@ package com.venky.core.util;
  */
 public class ExceptionUtil {
     public static Throwable getRootCause(Throwable in){
-        Throwable out = in;
-        while (out.getCause()!= null){
-            out = out.getCause();
+    	return getEmbeddedException(in,Throwable.class);
+    }
+    public static Throwable getEmbeddedException(Throwable in, Class<?> instanceOfThisClass){
+        Throwable ret = null ;
+        Throwable ex = in;
+        while (ex != null ){
+        	if (instanceOfThisClass.isInstance(ex)){
+        		ret = ex;
+        	}
+        	ex = ex.getCause();
         }
-        return out;
-
+        return ret;
+    	
     }
 }
