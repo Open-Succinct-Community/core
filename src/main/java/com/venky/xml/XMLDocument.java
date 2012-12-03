@@ -38,6 +38,7 @@ public class XMLDocument {
         documentRoot = createElement(rootName);
         document.appendChild(documentRoot.getInner());
     }
+    
     public final XMLElement createElement(String tagName) {
         return new XMLElement(this, document.createElement(tagName));
     }

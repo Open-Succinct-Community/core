@@ -6,6 +6,11 @@ import java.lang.reflect.Modifier;
 import com.venky.cache.Cache;
 
 public class MethodSignatureCache extends Cache<Method,String>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5591934380604234015L;
+
 	public MethodSignatureCache(){
 		super(1000,0.2);
 	}

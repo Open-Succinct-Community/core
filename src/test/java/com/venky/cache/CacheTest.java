@@ -29,6 +29,10 @@ public class CacheTest {
 		assertTrue("First Entry should have been replaced in cache!" ,map.get(1) != cache.get(1));
 	}
 	public static class RandomNumberCache extends Cache<Integer, Integer>{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2999714588055843718L;
 		public RandomNumberCache(int maxEntries, double pruneFactor){
 			super(maxEntries,pruneFactor);
 		}
