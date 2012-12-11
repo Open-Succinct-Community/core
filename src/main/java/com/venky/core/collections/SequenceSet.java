@@ -259,7 +259,8 @@ public class SequenceSet<E> implements Set<E> , Cloneable, List<E>{
 
 		@Override
 		public void remove() {
-			SequenceSet.this.remove(cursor-1);
+			cursor--;
+			SequenceSet.this.remove(cursor);
 		}
 
 		@Override

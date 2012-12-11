@@ -7,12 +7,25 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class IgnoreCaseList extends AbstractIgnoreCaseCollection implements List<String>,Cloneable{
-	private ArrayList<String> inner =null;
+	private List<String> inner =null;
 	public IgnoreCaseList(){
-		inner = new ArrayList<String>();
+		this(true);
+	}
+	public IgnoreCaseList(boolean allowDuplicates){
+		this(allowDuplicates,null);
 	}
 	public IgnoreCaseList(Collection<String> c){
-		inner = new ArrayList<String>(c);
+		this(true,c);
+	}
+	public IgnoreCaseList(boolean allowDuplicates,Collection<String> initial){
+		if (allowDuplicates){
+			inner = new ArrayList<String>();
+		}else {
+			inner = new SequenceSet<String>();
+		}
+		if (initial != null){
+			inner.addAll(initial);
+		}
 	}
 	public int size() {
 		return inner.size();
@@ -85,22 +98,20 @@ public class IgnoreCaseList extends AbstractIgnoreCaseCollection implements List
 	public List<String> subList(int fromIndex, int toIndex) {
 		return inner.subList(fromIndex, toIndex);
 	}
-	public void trimToSize() {
-		inner.trimToSize();
-	}
-	public void ensureCapacity(int minCapacity) {
-		inner.ensureCapacity(minCapacity);
-	}
+	
 	@SuppressWarnings("unchecked")
 	public Object clone() {
 		try {
 			IgnoreCaseList clone = (IgnoreCaseList)super.clone();
-			clone.inner = (ArrayList<String>)inner.clone();
+			if (inner instanceof ArrayList){
+				clone.inner = (List<String>)(((ArrayList<String>) inner).clone());
+			}else {
+				clone.inner = (List<String>)(((SequenceSet<String>) inner).clone());
+			}
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new InternalError();
 		}
-		
 	}
 	public String toString() {
 		return inner.toString();
