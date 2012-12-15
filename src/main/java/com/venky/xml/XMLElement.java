@@ -43,22 +43,28 @@ public class XMLElement extends XMLNode {
     public Iterator<XMLElement> getChildElements() {
         return new ChildElementIterator(inner.getChildNodes());
     }
+    public Iterator<XMLElement> getChildElements(String elementName) {
+        return new ChildElementIterator(inner.getChildNodes(),elementName);
+    }
 
     public XMLElement getChildElement(String elementName) {
-        NodeList list = inner.getElementsByTagName(elementName);
-        if (list != null && list.getLength() > 0) {
-            Element element = (Element) list.item(0);
-            return new XMLElement(getXMLDocument(), element);
+        Iterator<XMLElement> iter = getChildElements(elementName);
+        XMLElement child = null;
+        if (iter.hasNext()){
+        	child = iter.next();
         }
-        return null;
+        return child;
     }
 
     public class ChildElementIterator implements Iterator<XMLElement> {
         private final ChildNodeIterator delegate;
         public ChildElementIterator(NodeList children) {
-            delegate = new ChildNodeIterator(children, new short[]{Node.ELEMENT_NODE});
+            this(children,null);
         }
-
+        public ChildElementIterator(NodeList children,String elementName) {
+            delegate = new ChildNodeIterator(children, new short[]{Node.ELEMENT_NODE},elementName);
+        }
+        
         public boolean hasNext() {
             return delegate.hasNext();
         }

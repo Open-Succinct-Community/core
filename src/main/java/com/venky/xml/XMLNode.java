@@ -132,12 +132,17 @@ public class XMLNode {
             this(children, new short[]{});
         }
         public ChildNodeIterator(NodeList children, short[] nodeType) {
+        	this(children,nodeType, null);
+        }
+        public ChildNodeIterator(NodeList children, short[] nodeType,String nodeName) {
             List<XMLNode> colChildren = new ArrayList<XMLNode>();
             if (children != null) {
                 for (int i = 0; i < children.getLength(); i++) {
                     Node node = children.item(i);
                     if (isNodeOfType(node, nodeType)) {
-                        colChildren.add(getXMLNode(node));
+                    	if (nodeName == null || nodeName.equals(node.getNodeName())) {
+                            colChildren.add(getXMLNode(node));
+                    	}
                     }
                 }
             }
