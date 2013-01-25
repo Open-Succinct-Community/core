@@ -123,6 +123,12 @@ public abstract class Cache<K,V> implements Mergeable<Cache<K,V>> , Serializable
 			accessTimeMap.remove(key);
 		}
 	}
+	public void clear(){
+		synchronized (cacheMap) {
+			cacheMap.clear();
+			accessTimeMap.clear();
+		}
+	}
 	
 	public void put(K key,V value){
 		synchronized (cacheMap) {
