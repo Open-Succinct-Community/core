@@ -80,22 +80,22 @@
     <dependency>
       <groupId>com.github.venkatramanm</groupId>
       <artifactId>common</artifactId>
-      <version>1.14</version>
+      <version>[1.15,)</version>
     </dependency>
     <dependency>
       <groupId>com.github.venkatramanm</groupId>
       <artifactId>reflection</artifactId>
-      <version>1.12</version>
+      <version>[1.13,)</version>
     </dependency>
     <dependency>
       <groupId>com.github.venkatramanm</groupId>
       <artifactId>poi</artifactId>
-      <version>1.12</version>
+      <version>[1.12,)</version>
     </dependency>
     <dependency>
       <groupId>com.github.venkatramanm</groupId>
       <artifactId>ocr</artifactId>
-      <version>1.11</version>
+      <version>[1.11,)</version>
     </dependency>
   </dependencies>
 </project>
